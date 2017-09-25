@@ -1,0 +1,28 @@
+{
+    "name": "cosman/bigcommerce-integration",
+    "description": "Syncommerce Bigcommerce integration package",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Agbitor Cosman",
+            "email": "cosman@syncommerceapp.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^5.5",
+        "symfony/http-foundation": "^3.3",
+        "mavericks-lab/bigcommerce": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Maverickslab\\Integration\\BigCommerce\\": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "https://github.com/mavericks-lab/bigcommerce"
+        }
+    ]
+}
