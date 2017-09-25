@@ -25,7 +25,7 @@ class Order extends BaseModel
     
     /**
      * 
-     * @var unknown
+     * @var string
      */
     protected $date_created;
 
