@@ -16,18 +16,78 @@ class Order extends BaseModel
      * @var int
      */
     protected $id;
-    
+
     /**
-     * 
+     *
      * @var int
      */
     protected $customer_id;
+
+    /**
+     *
+     * @var \DateTime
+     */
+    protected $date_created;
+
+    /**
+     *
+     * @var \DateTime
+     */
+    protected $date_modified;
+
+    /**
+     *
+     * @var \DateTime
+     */
+    protected $date_shipped;
+
+    /**
+     *
+     * @var int
+     */
+    protected $status_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $status;
+
+    /**
+     *
+     * @var string
+     */
+    protected $custom_status;
+
+    /**
+     *
+     * @var float
+     */
+    protected $subtotal_ex_tax;
+
+    /**
+     *
+     * @var float
+     */
+    protected $subtotal_inc_tax;
+
+    /**
+     *
+     * @var float
+     */
+    protected $subtotal_tax;
+
+    /**
+     *
+     * @var float
+     */
+    protected $base_shipping_cost;
     
     /**
      * 
-     * @var string
+     * @var float
      */
-    protected $date_created;
+    protected $shipping_cost_ex_tax;
 
     /**
      * Returns order Id
@@ -41,7 +101,7 @@ class Order extends BaseModel
 
     /**
      * Sets order Id
-     * 
+     *
      * @param int $id
      * @return self
      */
