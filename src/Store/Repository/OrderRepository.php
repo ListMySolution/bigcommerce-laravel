@@ -3,6 +3,8 @@ declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 
 use Maverickslab\Integration\BigCommerce\Store\Model\Order;
+use Maverickslab\Integration\BigCommerce\Store\Model\Product;
+use Maverickslab\Integration\BigCommerce\Store\Model\Customer;
 
 /**
  * Order repository
@@ -22,7 +24,7 @@ class OrderRepository extends BaseRepository
     {
         // TODO: Change this method's visibility to PUBLIC and rename it to "import"
         $page = 1;
-        $limit = 500;
+        $limit = 400;
         $totalPages = 0;
         
         $orders = [];
@@ -54,7 +56,7 @@ class OrderRepository extends BaseRepository
     public function import(): array
     {
         $page = 1;
-        $limit = 1000;
+        $limit = 500;
         $totalPages = 0;
         $orders = [];
         
@@ -83,10 +85,28 @@ class OrderRepository extends BaseRepository
             
             $responseData = $this->decodeResponse($responses[0]);
             
+            $customerPromises = [];
+            
             if (is_array($responseData->data)) {
                 foreach ($responseData->data as $orderModel) {
-                    $orders[] = Order::fromBigCommerce($orderModel);
+                    $order = Order::fromBigCommerce($orderModel);
+                    $orderIds[] = $order->getId();
+                    $orders[$order->getId()] = $order;
+                    
+                    // BigCommerce doesn't include customer details in the same request as the order itself, so we have to
+                    // subsequest request for customer associated with a given order
+                    $customerPromises[$order->getId()] = $this->bigCommerce->customer()->fetchById($order->getCustomerId());
                 }
+            }
+            
+            $customerResponses = $this->bigCommerce->customer()
+                ->resolvePromises($customerPromises)
+                ->wait();
+            
+            foreach ($customerResponses as $orderId => $customerResponse) {
+                $customerResponseData = $this->decodeResponse($customerResponse);
+                
+                $orders[$orderId]->setCustomer(Customer::fromBigCommerce($customerResponseData->data));
             }
         } while ($page <= $totalPages);
         

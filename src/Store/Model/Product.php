@@ -561,10 +561,10 @@ class Product extends BaseModel
             $instance->setSalePrice(static::readAttribute($model, 'sale_price'));
             $instance->setDescription(static::readAttribute($model, 'description'));
             $instance->setType(static::readAttribute($model, 'type'));
-            $instance->setWeight(static::readAttribute($model, 'weight', 0));
-            $instance->setWidth(static::readAttribute($model, 'width', 0));
-            $instance->setHeight(static::readAttribute($model, 'height', 0));
-            $instance->setDepth(static::readAttribute($model, 'depth', 0));
+            $instance->setWeight((float) static::readAttribute($model, 'weight', 0));
+            $instance->setWidth((float) static::readAttribute($model, 'width', 0));
+            $instance->setHeight((float) static::readAttribute($model, 'height', 0));
+            $instance->setDepth((float) static::readAttribute($model, 'depth', 0));
             
             $variants = array_map(function ($variantModel) {
                 return ProductVariant::fromBigCommerce($variantModel);

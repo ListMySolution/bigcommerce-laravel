@@ -27,7 +27,7 @@ class CustomerRepository extends BaseRepository
         
         do {
             $response = $this->bigCommerce->customer()
-                ->fetchSubscribers($page ++, $limit)
+                ->fetch($page ++, $limit)
                 ->wait();
             
             $responseData = $this->decodeResponse($response);
@@ -52,7 +52,7 @@ class CustomerRepository extends BaseRepository
     public function export(Customer ...$customers): array
     {
         $promises = array_map(function (Customer $customer) {
-            return $this->bigCommerce->customer()->createSubscriber($customer->toBigCommerceEntity());
+            return $this->bigCommerce->customer()->create($customer->toBigCommerceEntity());
         }, $customers);
         
         $responses = $this->bigCommerce->customer()
@@ -78,7 +78,7 @@ class CustomerRepository extends BaseRepository
     public function exportUpdate(Customer ...$customers): array
     {
         $promises = array_map(function (Customer $customer) {
-            return $this->bigCommerce->customer()->updateSubscriber($customer->getId(), $customer->toBigCommerceEntity());
+            return $this->bigCommerce->customer()->update($customer->getId(), $customer->toBigCommerceEntity());
         }, $customers);
         
         $responses = $this->bigCommerce->customer()
@@ -117,7 +117,7 @@ class CustomerRepository extends BaseRepository
     public function deleteByIds(int ...$customerIds): void
     {
         $promises = array_map(function (int $customerId) {
-            return $this->bigCommerce->customer()->deleteSubscriberById($customerId);
+            return $this->bigCommerce->customer()->deleteById($customerId);
         }, array_filter($customerIds));
         
         $this->bigCommerce->customer()
