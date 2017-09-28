@@ -377,9 +377,9 @@ class Order extends BaseModel
 
     /**
      *
-     * @var \stdClass
+     * @var OrderCoupon[]
      */
-    protected $coupons;
+    protected $coupons = [];
 
     /**
      * Returns order Id
@@ -1767,22 +1767,24 @@ class Order extends BaseModel
     /**
      * Returns coupons associated with order
      *
-     * @return \stdClass
+     * @return OrderCoupon[]
      */
-    public function getCoupons(): \stdClass
+    public function getCoupons(): array
     {
         return $this->coupons;
     }
 
     /**
-     * Sets coupons for order
+     * Adds at least one coupon to order
      *
-     * @param \stdClass $coupons
+     * @param OrderCoupon ...$coupons
      * @return self
      */
-    public function setCoupons(?\stdClass $coupons): self
+    public function addCoupons(OrderCoupon ...$coupons): self
     {
-        $this->coupons = $coupons;
+        foreach ($coupons as $coupon) {
+            $this->coupons[] = $coupon;
+        }
         
         return $this;
     }
@@ -1821,7 +1823,8 @@ class Order extends BaseModel
             'status',
             'date_shipped',
             'date_modified',
-            'id'
+            'id',
+            'customer'
         );
         
         foreach ($readOnlyProperties as $property) {
@@ -1930,6 +1933,26 @@ class Order extends BaseModel
             
             if (null !== $customerModel) {
                 $instance->setCustomer(Customer::fromBigCommerce($customerModel));
+            }
+            
+            $shippingAddressesModels = static::readAttribute($model, 'shipping_addresses', []);
+            
+            if (is_array($shippingAddressesModels)) {
+                $shippingAddresses = array_map(function ($shippingAddressModel) {
+                    return ShippingAddress::fromBigCommerce($shippingAddressModel);
+                }, $shippingAddressesModels);
+                
+                $instance->addShippingAddresses(...$shippingAddresses);
+            }
+            
+            $couponModelArray = static::readAttribute($model, 'coupons', []);
+            
+            if (is_array($couponModelArray)) {
+                $coupons = array_map(function ($couponModel) {
+                    return OrderCoupon::fromBigCommerce($couponModel);
+                }, $couponModelArray);
+                
+                $instance->addCoupons(...$coupons);
             }
         }
         

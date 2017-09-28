@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 
-use Maverickslab\Integration\BigCommerce\Store\Model\Order;
-use Maverickslab\Integration\BigCommerce\Store\Model\Product;
 use Maverickslab\Integration\BigCommerce\Store\Model\Customer;
+use Maverickslab\Integration\BigCommerce\Store\Model\Order;
+use DateTime;
 
 /**
  * Order repository
@@ -16,99 +16,88 @@ class OrderRepository extends BaseRepository
 {
 
     /**
-     * Imports all order from BigCommerce (V3)
-     *
-     * @return Order[]
-     */
-    private function importV3(): array
-    {
-        // TODO: Change this method's visibility to PUBLIC and rename it to "import"
-        $page = 1;
-        $limit = 400;
-        $totalPages = 0;
-        
-        $orders = [];
-        
-        do {
-            $response = $this->bigCommerce->order()
-                ->fetch($page ++, $limit)
-                ->wait();
-            
-            $responseData = $this->decodeResponse($response);
-            
-            $totalPages = $responseData->meta->pagination->total_pages;
-            
-            if (is_array($responseData->data)) {
-                foreach ($responseData->data as $orderModel) {
-                    $orders[] = Order::fromBigCommerce($orderModel);
-                }
-            }
-        } while ($page < $totalPages);
-        
-        return $orders;
-    }
-
-    /**
      * Imports all order from BigCommerce
      *
      * @return Order[]
      */
     public function import(): array
     {
-        $page = 1;
-        $limit = 500;
-        $totalPages = 0;
+        return $this->importByFilters();
+    }
+
+    /**
+     * Imports order between two dates
+     *
+     * @param DateTime $startDateTime
+     * @param DateTime $endDateTime
+     * @return Order[]
+     */
+    public function importBetweenDates(DateTime $startDateTime, DateTime $endDateTime = null): array
+    {
+        $filters = [];
+        
+        if (null !== $startDateTime) {
+            $filters['min_date_created'] = $startDateTime->format(DateTime::RSS);
+        }
+        
+        if (null === $endDateTime) {
+            $endDateTime = new DateTime();
+        }
+        
+        $filters['max_date_created'] = $endDateTime->format(DateTime::RSS);
+        
+        return $this->importByFilters($filters);
+    }
+
+    /**
+     * Imports order from BigCommerce matching a given sets of filters
+     *
+     * @param array $filters
+     * @return array
+     */
+    public function importByFilters(array $filters = []): array
+    {
+        // DO NOT INCREASE THE VALUE FOR LIMIT, 250 IS THE MAXIMUM LIMIT SUPPORTED BY BIGCOMMERCE API V2
+        $limit = 250;
         $orders = [];
+        $page = 1;
+        $itemsReturnedForCurrentRequest = 0;
+        $customerPromises = [];
         
         do {
-            
-            $promises = array(
-                $this->bigCommerce->order()->fetch($page ++, $limit)
-            );
-            
-            if (0 == $totalPages) {
-                $promises[] = $this->bigCommerce->order()->count();
-            }
-            
-            $responses = $this->bigCommerce->order()
-                ->resolvePromises($promises)
+            $response = $this->bigCommerce->order()
+                ->fetch($page ++, $limit, $filters)
                 ->wait();
             
-            if (2 === count($responses)) {
-                
-                $totalOrders = $this->decodeResponse($responses[1])->data->count;
-                
-                if (0 !== $totalOrders) {
-                    $totalPages = ceil($totalOrders / $limit);
-                }
-            }
-            
-            $responseData = $this->decodeResponse($responses[0]);
-            
-            $customerPromises = [];
+            $responseData = $this->decodeResponse($response);
             
             if (is_array($responseData->data)) {
+                $itemsReturnedForCurrentRequest = count($responseData->data);
+                
                 foreach ($responseData->data as $orderModel) {
                     $order = Order::fromBigCommerce($orderModel);
-                    $orderIds[] = $order->getId();
-                    $orders[$order->getId()] = $order;
                     
-                    // BigCommerce doesn't include customer details in the same request as the order itself, so we have to
-                    // subsequest request for customer associated with a given order
+                    $orders[$order->getId()] = $order;
+                    // BIGCOMMERCE DOES NOT INCLUDE FULL CUSTOMER DETAILS IN ORDER REQUEST, SO WE HAVE TO FIND A WAY TO FETCH
+                    // THEM SUBSEQUENT REQUEST
                     $customerPromises[$order->getId()] = $this->bigCommerce->customer()->fetchById($order->getCustomerId());
                 }
+            } else {
+                // A 204 - No content- may have been returned.
+                // Break, assuming we have reach the end of the list
+                break;
             }
-            
-            $customerResponses = $this->bigCommerce->customer()
-                ->resolvePromises($customerPromises)
-                ->wait();
-            
-            foreach ($customerResponses as $orderId => $customerResponse) {
-                $customerResponseData = $this->decodeResponse($customerResponse);
-                
-                $orders[$orderId]->setCustomer(Customer::fromBigCommerce($customerResponseData->data));
-            }
-        } while ($page <= $totalPages);
+        } while ($limit == $itemsReturnedForCurrentRequest);
+        
+        // FETCH CUSTOMERS FULL DETAILS
+        $customerResponses = $this->bigCommerce->customer()
+            ->resolvePromises($customerPromises)
+            ->wait();
+        
+        foreach ($customerResponses as $orderId => $customerResponse) {
+            $customerResponseData = $this->decodeResponse($customerResponse);
+            $orders[$orderId]->setCustomer(Customer::fromBigCommerce($customerResponseData->data));
+        }
         
         return $orders;
     }

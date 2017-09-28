@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Model;
 
 use Maverickslab\Integration\BigCommerce\Exception\BigCommerceIntegrationException;
+use DateTime;
 
 class Product extends BaseModel
 {
@@ -11,6 +12,12 @@ class Product extends BaseModel
 
     const TYPE_DIGITAL = 'digital';
 
+    const CONDITION_NEW = 'New';
+
+    const CONDITION_USED = 'Used';
+
+    const CONDITION_REFURBISHED = 'Refurbished';
+
     /**
      *
      * @var array
@@ -18,6 +25,16 @@ class Product extends BaseModel
     static $types = array(
         Self::TYPE_DIGITAL,
         self::TYPE_PHYSICAL
+    );
+
+    /**
+     *
+     * @var array
+     */
+    static $conditions = array(
+        self::CONDITION_NEW,
+        self::CONDITION_USED,
+        self::CONDITION_REFURBISHED
     );
 
     /**
@@ -112,40 +129,231 @@ class Product extends BaseModel
 
     /**
      *
+     * @var int
+     */
+    protected $tax_class_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $product_tax_code;
+
+    /**
+     *
+     * @var int
+     */
+    protected $brand_id;
+
+    /**
+     *
+     * @var int
+     */
+    protected $inventory_level;
+
+    /**
+     *
+     * @var int
+     */
+    protected $inventory_warning_level;
+
+    /**
+     *
+     * @var string
+     */
+    protected $inventory_tracking;
+
+    /**
+     *
+     * @var float
+     */
+    protected $fixed_cost_shipping_price;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $is_free_shipping;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $is_visible;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $is_featured;
+
+    /**
+     *
+     * @var int[]
+     */
+    protected $related_products = [];
+
+    /**
+     *
+     * @var string
+     */
+    protected $warranty;
+
+    /**
+     *
+     * @var string
+     */
+    protected $bin_picking_number;
+
+    /**
+     *
+     * @var string
+     */
+    protected $layout_file;
+
+    /**
+     *
+     * @var string
+     */
+    protected $upc;
+
+    /**
+     *
+     * @var string
+     */
+    protected $search_keywords;
+
+    /**
+     *
+     * @var string
+     */
+    protected $availability;
+
+    /**
+     *
+     * @var string
+     */
+    protected $availability_description;
+
+    /**
+     *
+     * @var string
+     */
+    protected $gift_wrapping_options_type;
+
+    /**
+     *
+     * @var int[]
+     */
+    protected $gift_wrapping_options_list = [];
+
+    /**
+     *
+     * @var int
+     */
+    protected $sort_order = 0;
+
+    /**
+     *
+     * @var string
+     */
+    protected $condition = self::CONDITION_NEW;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $is_condition_shown;
+
+    /**
+     *
+     * @var int
+     */
+    protected $order_quantity_minimum;
+
+    /**
+     *
+     * @var int
+     */
+    protected $order_quantity_maximum;
+
+    /**
+     *
+     * @var string
+     */
+    protected $page_title;
+
+    /**
+     *
+     * @var string
+     */
+    protected $meta_keywords;
+
+    /**
+     *
+     * @var string
+     */
+    protected $meta_description;
+
+    /**
+     *
+     * @var int
+     */
+    protected $view_count;
+
+    /**
+     *
+     * @var DateTime
+     */
+    protected $preorder_release_date;
+
+    /**
+     *
+     * @var string
+     */
+    protected $preorder_message;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $is_preorder_only;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $is_price_hidden;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $price_hidden_label;
+
+    /**
+     *
+     * @var CustomUrl
+     */
+    protected $custom_url;
+
+    /**
+     *
+     * @var CustomField[]
+     */
+    protected $custom_fields = [];
+
+    /**
+     *
+     * @var BulkPricingRule[]
+     */
+    protected $bulk_pricing_rules = [];
+
+    /**
+     *
      * @var ProductVariant[]
      */
     protected $variants = [];
-
-    public function __construct(\stdClass $model = null)
-    {
-        if (null !== $model) {
-            $this->setId(static::readAttribute($model, 'id'));
-            $this->setName(static::readAttribute($model, 'name'));
-            $this->setSKU(static::readAttribute($model, 'sku'));
-            $this->setPrice(static::readAttribute($model, 'price', 0));
-            $this->setCostPrice(static::readAttribute($model, 'cost_price', 0));
-            $this->setRetailPrice(static::readAttribute($model, 'retail_price', 0));
-            $this->setSalePrice(static::readAttribute($model, 'sale_price'));
-            $this->setDescription(static::readAttribute($model, 'description'));
-            $this->setType(static::readAttribute($model, 'type'));
-            $this->setWeight(static::readAttribute($model, 'weight', 0));
-            $this->setWidth(static::readAttribute($model, 'width', 0));
-            $this->setHeight(static::readAttribute($model, 'height', 0));
-            $this->setDepth(static::readAttribute($model, 'depth', 0));
-            
-            $variants = array_map(function ($variantModel) {
-                return ProductVariant::fromBigCommerce($variantModel);
-            }, static::readAttribute($model, 'variants', []));
-            
-            $this->addVariants(...$variants);
-            
-            $images = array_map(function ($imageModel) {
-                return Image::fromBigCommerce($imageModel);
-            }, static::readAttribute($model, 'images', []));
-            
-            $this->addImages(...$images);
-        }
-    }
 
     /**
      * Returns product Id
