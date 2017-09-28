@@ -285,9 +285,9 @@ class Product extends BaseModel
 
     /**
      *
-     * @var string
+     * @var string[]
      */
-    protected $meta_keywords;
+    protected $meta_keywords = [];
 
     /**
      *
@@ -327,7 +327,7 @@ class Product extends BaseModel
 
     /**
      *
-     * @var bool
+     * @var string
      */
     protected $price_hidden_label;
 
@@ -443,6 +443,10 @@ class Product extends BaseModel
      */
     public function setType(?string $type): self
     {
+        if (empty($type)) {
+            $type = null;
+        }
+        
         if (! is_null($type) && ! in_array($type, self::$types)) {
             throw new BigCommerceIntegrationException(sprintf('Unsupported product type "%s".', $type));
         }
@@ -660,6 +664,47 @@ class Product extends BaseModel
     }
 
     /**
+     * Returns product category ids
+     *
+     * @return int[]
+     */
+    public function getCategoryIds(): array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * Sets product categories
+     *
+     * @param
+     *            int[]
+     * @return self
+     */
+    public function setCategoryIds(array $categories): self
+    {
+        $this->categories = [];
+        
+        $this->addCategory(...$categories);
+        
+        return $this;
+    }
+
+    /**
+     * Adds at least one category id to current instance
+     *
+     * @param int ...$categories
+     * @return self
+     */
+    public function addCategoryIds(int ...$categories): self
+    {
+        foreach ($categories as $category) {
+            $this->categories[] = $category;
+        }
+        
+        return $this;
+    }
+
+    /**
      * Returns product categories
      *
      * @return Category[]
@@ -750,6 +795,870 @@ class Product extends BaseModel
     }
 
     /**
+     * Returns tax class id
+     *
+     * @return int|NULL
+     */
+    public function getTaxClassId(): ?int
+    {
+        return $this->tax_class_id;
+    }
+
+    /**
+     * Sets tax class id
+     *
+     * @param int $id
+     * @return self
+     */
+    public function setTaxClassId(?int $id): self
+    {
+        $this->tax_class_id = $id;
+        
+        return $this;
+    }
+
+    /**
+     * Returns product tax code
+     *
+     * @return string|NULL
+     */
+    public function getTaxCode(): ?string
+    {
+        return $this->product_tax_code;
+    }
+
+    /**
+     * Sets product tax code
+     *
+     * @param string $code
+     * @return self
+     */
+    public function setTaxCode(?string $code): self
+    {
+        $this->product_tax_code = $code;
+        
+        return $this;
+    }
+
+    /**
+     * Return product brand id
+     *
+     * @return int|NULL
+     */
+    public function getBrandId(): ?int
+    {
+        return $this->brand_id;
+    }
+
+    /**
+     * Sets product brand id
+     *
+     * @param int $id
+     * @return self
+     */
+    public function setBrandId(?int $id): self
+    {
+        $this->brand_id = $id;
+        
+        return $this;
+    }
+
+    /**
+     * Returns inventory level
+     *
+     * @return int|NULL
+     */
+    public function getInventoryLevel(): ?int
+    {
+        return $this->inventory_level;
+    }
+
+    /**
+     * Sets product inventory level
+     *
+     * @param int $level
+     * @return self
+     */
+    public function setInventoryLevel(?int $level): self
+    {
+        $this->inventory_level = $level;
+        
+        return $this;
+    }
+
+    /**
+     * Returns inventory warning level
+     *
+     * @return int|NULL
+     */
+    public function getInventoryWarningLevel(): ?int
+    {
+        return $this->inventory_warning_level;
+    }
+
+    /**
+     * Sets inventory warning level
+     *
+     * @param int $warningLevel
+     * @return self
+     */
+    public function setInventoryWarningLevel(?int $warningLevel): self
+    {
+        $this->inventory_warning_level = $warningLevel;
+        
+        return $this;
+    }
+
+    /**
+     * Returns inventory tracking
+     *
+     * @return string|NULL
+     */
+    public function getInventoryTracking(): ?string
+    {
+        return $this->inventory_tracking;
+    }
+
+    /**
+     * Sets inventory tracking
+     *
+     * @param string $tracking
+     * @return self
+     */
+    public function setInventoryTracking(?string $tracking): self
+    {
+        $this->inventory_tracking = $tracking;
+        
+        return $this;
+    }
+
+    /**
+     * Returns fixed cost shipping price
+     *
+     * @return float|NULL
+     */
+    public function getFixedCostShippingPrice(): ?float
+    {
+        return $this->fixed_cost_shipping_price;
+    }
+
+    /**
+     * Sets fixed cost shipping price
+     *
+     * @param float $price
+     * @return self
+     */
+    public function setFixedCostShippingPrice(?float $price): self
+    {
+        $this->fixed_cost_shipping_price = $price;
+        
+        return $this;
+    }
+
+    /**
+     * Tells whether a product has free shipping option
+     *
+     * @return bool|NULL
+     */
+    public function isFreeShipping(): ?bool
+    {
+        return $this->is_free_shipping;
+    }
+
+    /**
+     * Sets whether a product has a free shipping option
+     *
+     * @param bool $state
+     * @return self
+     */
+    public function setIsFreeShipping(?bool $state): self
+    {
+        $this->is_free_shipping = $state;
+        
+        return $this;
+    }
+
+    /**
+     * Tells whether a product is visible in store
+     *
+     * @return bool|NULL
+     */
+    public function isVisible(): ?bool
+    {
+        return $this->is_visible;
+    }
+
+    /**
+     * Sets whether a product should be visible in the store
+     *
+     * @param bool $state
+     * @return self
+     */
+    public function setIsVisible(?bool $state): self
+    {
+        $this->is_visible = $state;
+        
+        return $this;
+    }
+
+    /**
+     * Tells whether a product is featured in the store
+     *
+     * @return bool|NULL
+     */
+    public function isFeatured(): ?bool
+    {
+        return $this->is_featured;
+    }
+
+    /**
+     * Sets whether a product should be featured in the store
+     *
+     * @param bool $state
+     * @return self
+     */
+    public function setIsFeatured(?bool $state): self
+    {
+        $this->is_featured = $state;
+        
+        return $this;
+    }
+
+    /**
+     * Returns a list of id's related products
+     *
+     * @return int[]
+     */
+    public function getRelatedProductIds(): array
+    {
+        return $this->related_products;
+    }
+
+    /**
+     * Adds a list of id's related products for this product
+     *
+     * @return self
+     */
+    public function addRelatedProductIds(int ...$ids): self
+    {
+        foreach ($ids as $id) {
+            $this->related_products[] = $id;
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Returns product warranty
+     *
+     * @return string|NULL
+     */
+    public function getWarranty(): ?string
+    {
+        return $this->warranty;
+    }
+
+    /**
+     * Sets product warranty
+     *
+     * @param string $warranty
+     * @return self
+     */
+    public function setWarranty(?string $warranty): self
+    {
+        $this->warranty = $warranty;
+        
+        return $this;
+    }
+
+    /**
+     * Return bin picking number
+     *
+     * @return string|NULL
+     */
+    public function getBinPickingNumber(): ?string
+    {
+        return $this->bin_picking_number;
+    }
+
+    /**
+     * Sets bin picking number
+     *
+     * @param string $binNumber
+     * @return self
+     */
+    public function setBinPickingNumber(?string $binNumber): self
+    {
+        $this->bin_picking_number = $binNumber;
+        
+        return $this;
+    }
+
+    /**
+     * Returns layout file
+     *
+     * @return string|NULL
+     */
+    public function getLayoutFile(): ?string
+    {
+        return $this->layout_file;
+    }
+
+    /**
+     * Sets layout file
+     *
+     * @param string $layout
+     * @return self
+     */
+    public function setLayoutFile(?string $layout): self
+    {
+        $this->layout_file = $layout;
+        
+        return $this;
+    }
+
+    /**
+     * Returns product UPC
+     *
+     * @return string|NULL
+     */
+    public function getUPC(): ?string
+    {
+        return $this->upc;
+    }
+
+    /**
+     * Sets product UPC
+     *
+     * @param string $upc
+     * @return self
+     */
+    public function setUPC(?string $upc): self
+    {
+        $this->upc = $upc;
+        
+        return $this;
+    }
+
+    /**
+     * Returns search keywords
+     *
+     * @return string|NULL
+     */
+    public function getSearchKeywords(): ?string
+    {
+        return $this->search_keywords;
+    }
+
+    /**
+     * Sets search keywords
+     *
+     * @param string $keywords
+     * @return self
+     */
+    public function setSearchKeywords(?string $keywords): self
+    {
+        $this->search_keywords = $keywords;
+        
+        return $this;
+    }
+
+    /**
+     * Returns product availability
+     *
+     * @return string|NULL
+     */
+    public function getAvailability(): ?string
+    {
+        return $this->availability;
+    }
+
+    /**
+     * Sets product availability
+     *
+     * @param string $availability
+     * @return self
+     */
+    public function setAvailability(?string $availability): self
+    {
+        $this->availability = $availability;
+        
+        return $this;
+    }
+
+    /**
+     * Returns product availability description
+     *
+     * @return string|NULL
+     */
+    public function getAvailabilityDescription(): ?string
+    {
+        return $this->availability_description;
+    }
+
+    /**
+     * Sets product availability description
+     *
+     * @param string $description
+     * @return self
+     */
+    public function setAvailabilityDescription(?string $description): self
+    {
+        $this->availability_description = $description;
+        
+        return $this;
+    }
+
+    /**
+     * Returns gift wrapping option type for product
+     *
+     * @return string|NULL
+     */
+    public function getGiftWrappingOptionType(): ?string
+    {
+        return $this->gift_wrapping_options_type;
+    }
+
+    /**
+     * Sets gift wrapping option type for product
+     *
+     * @param string $type
+     * @return self
+     */
+    public function setGiftWrappingOptionType(?string $type): self
+    {
+        $this->gift_wrapping_options_type = $type;
+        
+        return $this;
+    }
+
+    /**
+     * Returns gift wrapping option list for product
+     *
+     * @return int[]
+     */
+    public function getGiftWrappingOptionList(): array
+    {
+        return $this->gift_wrapping_options_list;
+    }
+
+    /**
+     * Adds at least one gift wrapping option list for product
+     *
+     * @param int ...$list
+     * @return self
+     */
+    public function addGiftWrappingOptionList(int ...$list): self
+    {
+        foreach ($list as $item) {
+            $this->gift_wrapping_options_list[] = $item;
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Returns product sort order
+     *
+     * @return int|NULL
+     */
+    public function getSortOrder(): ?int
+    {
+        return $this->sort_order;
+    }
+
+    /**
+     * Sets product sort order
+     *
+     * @param int $order
+     * @return self
+     */
+    public function setSortOrder(?int $order): self
+    {
+        $this->sort_order = $order;
+        
+        return $this;
+    }
+
+    /**
+     * Returns product condition
+     *
+     * @return string|NULL
+     */
+    public function getCondition(): ?string
+    {
+        return $this->condition;
+    }
+
+    /**
+     * Sets product condition
+     *
+     * @param string $condition
+     * @return self
+     */
+    public function setCondition(?string $condition): self
+    {
+        if (empty($condition)) {
+            $condition = null;
+        }
+        
+        if (null !== $condition && ! in_array($condition, static::$conditions)) {
+            throw new BigCommerceIntegrationException(sprintf('"%s" is not an acceptable product condition.', $condition));
+        }
+        $this->condition = $condition;
+        
+        return $this;
+    }
+
+    /**
+     * Tells whether product condition is shown on the store
+     *
+     * @return bool|NULL
+     */
+    public function isConditionShown(): ?bool
+    {
+        return $this->is_condition_shown;
+    }
+
+    /**
+     * Sets whether product condition should be shown on the store
+     *
+     * @param bool $state
+     * @return self
+     */
+    public function setIsConditionShown(?bool $state): self
+    {
+        $this->is_condition_shown = $state;
+        
+        return $this;
+    }
+
+    /**
+     * Returns the minimum quantity that can be order
+     *
+     * @return int|NULL
+     */
+    public function getMinimumOrderQuantity(): ?int
+    {
+        return $this->order_quantity_minimum;
+    }
+
+    /**
+     * Sets the minimum quantity that can be order
+     *
+     * @param int $quantity
+     * @return self
+     */
+    public function setMinimumOrderQuantity(?int $quantity): self
+    {
+        $this->order_quantity_minimum = $quantity;
+        
+        return $this;
+    }
+
+    /**
+     * Returns the maximum quantity that can be order
+     *
+     * @return int|NULL
+     */
+    public function getMaximumOrderQuantity(): ?int
+    {
+        return $this->order_quantity_maximum;
+    }
+
+    /**
+     * Sets the maximum quantity that can be order
+     *
+     * @param int $quantity
+     * @return self
+     */
+    public function setMaximumOrderQuantity(?int $quantity): self
+    {
+        $this->order_quantity_maximum = $quantity;
+        
+        return $this;
+    }
+
+    /**
+     * Returns product page title
+     *
+     * @return string|NULL
+     */
+    public function getPageTitle(): ?string
+    {
+        return $this->page_title;
+    }
+
+    /**
+     * Sets product page title
+     */
+    public function setPageTitle(?string $title): self
+    {
+        $this->page_title = $title;
+        
+        return $this;
+    }
+
+    /**
+     * Returns meta keywords
+     *
+     * @return string[]
+     */
+    public function getMetaKeywords(): array
+    {
+        return $this->meta_keywords;
+    }
+
+    /**
+     * Adds at least one meta keyword for product
+     *
+     * @param string ...$keywords
+     * @return self
+     */
+    public function addMetaKeywords(string ...$keywords): self
+    {
+        foreach ($keywords as $keyword) {
+            $this->meta_keywords[] = $keyword;
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Returns meta description for product
+     *
+     * @return string|NULL
+     */
+    public function getMetaDescription(): ?string
+    {
+        return $this->meta_description;
+    }
+
+    /**
+     * Sets meta description for product
+     *
+     * @param string $description
+     * @return self
+     */
+    public function setMetaDescription(?string $description): self
+    {
+        $this->meta_description = $description;
+        
+        return $this;
+    }
+
+    /**
+     * Returns number of times product has been viewed
+     *
+     * @return int|NULL
+     */
+    public function getViewCount(): ?int
+    {
+        return $this->view_count;
+    }
+
+    /**
+     * Sets number of times product has been viewed
+     *
+     * @param int $views
+     * @return self
+     */
+    public function setViewCount(?int $views): self
+    {
+        $this->view_count = $views;
+        
+        return $this;
+    }
+
+    /**
+     * Returns preorder release date
+     *
+     * @return DateTime|NULL
+     */
+    public function getPreorderReleaseDate(): ?DateTime
+    {
+        return $this->preorder_release_date;
+    }
+
+    /**
+     * Sets preorder release date
+     *
+     * @param DateTime $date
+     * @return self
+     */
+    public function setPreorderReleaseDate(?DateTime $date): self
+    {
+        $this->preorder_release_date = $date;
+        
+        return $this;
+    }
+
+    /**
+     * Returns preorder message
+     *
+     * @return string|NULL
+     */
+    public function getPreorderMessage(): ?string
+    {
+        return $this->preorder_message;
+    }
+
+    /**
+     * Sets preorder message
+     *
+     * @param string $message
+     * @return self
+     */
+    public function setPreorderMessage(?string $message): self
+    {
+        $this->preorder_message = $message;
+        
+        return $this;
+    }
+
+    /**
+     * Tells whether product is only to preordered
+     *
+     * @return bool|NULL
+     */
+    public function isPreorderOnly(): ?bool
+    {
+        return $this->is_preorder_only;
+    }
+
+    /**
+     * Sets whether product is only to preordered
+     *
+     * @param bool $state
+     * @return self
+     */
+    public function setIsPreorderOnly(?bool $state): self
+    {
+        $this->is_preorder_only = $state;
+        
+        return $this;
+    }
+
+    /**
+     * Tells whether product price should be hidden
+     *
+     * @return bool|NULL
+     */
+    public function isPriceHidden(): ?bool
+    {
+        return $this->is_price_hidden;
+    }
+
+    /**
+     * Sets whether product price should be hidden
+     *
+     * @param bool $state
+     * @return self
+     */
+    public function setIsPriceHidden(?bool $state): self
+    {
+        $this->is_price_hidden = $state;
+        
+        return $this;
+    }
+
+    /**
+     * Returns label to show when product price is set hidden
+     *
+     * @return string|NULL
+     */
+    public function getPriceHiddenLabel(): ?string
+    {
+        return $this->price_hidden_label;
+    }
+
+    /**
+     * Sets label to show when product price is set hidden
+     *
+     * @param string $label
+     * @return self
+     */
+    public function setPriceHiddenLabel(?string $label): self
+    {
+        $this->price_hidden_label = $label;
+        
+        return $this;
+    }
+
+    /**
+     * Returns custom url
+     *
+     * @return CustomUrl|NULL
+     */
+    public function getCustomUrl(): ?CustomUrl
+    {
+        return $this->custom_url;
+    }
+
+    /**
+     * Sets custom url
+     *
+     * @param CustomUrl $url
+     * @return self
+     */
+    public function setCustomUrl(?CustomUrl $url): self
+    {
+        $this->custom_url = $url;
+        
+        return $this;
+    }
+
+    /**
+     * Returns custom fields
+     *
+     * @return array
+     */
+    public function getCustomFields(): array
+    {
+        return $this->custom_fields;
+    }
+
+    /**
+     * Adds at least one custom fields to product
+     *
+     * @param CustomField ...$fields
+     * @return self
+     */
+    public function addCustomFields(CustomField ...$fields): self
+    {
+        foreach ($fields as $field) {
+            $this->custom_fields[] = $field;
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Returns product bulk pricing rules
+     *
+     * @return array
+     */
+    public function getBulkPricingRules(): array
+    {
+        return $this->bulk_pricing_rules;
+    }
+
+    /**
+     * Adds at least one bulk pricing rules to product
+     *
+     * @param BulkPricingRule ...$rules
+     * @return self
+     */
+    public function addBulkPricingRules(BulkPricingRule ...$rules): self
+    {
+        foreach ($rules as $rule) {
+            $this->bulk_pricing_rules[] = $rule;
+        }
+        
+        return $this;
+    }
+
+    /**
      * Creates an instance of this class from a BigCommerce entity/model
      *
      * @param mixed $model
@@ -760,31 +1669,127 @@ class Product extends BaseModel
         $instance = new static();
         
         if (null !== $model) {
-            $instance->setId(static::readAttribute($model, 'id'));
+            $instance->setId((int) static::readAttribute($model, 'id'));
             $instance->setName(static::readAttribute($model, 'name'));
             $instance->setSKU(static::readAttribute($model, 'sku'));
-            $instance->setPrice(static::readAttribute($model, 'price', 0));
-            $instance->setCostPrice(static::readAttribute($model, 'cost_price', 0));
-            $instance->setRetailPrice(static::readAttribute($model, 'retail_price', 0));
-            $instance->setSalePrice(static::readAttribute($model, 'sale_price'));
-            $instance->setDescription(static::readAttribute($model, 'description'));
-            $instance->setType(static::readAttribute($model, 'type'));
+            $instance->setPrice((float) static::readAttribute($model, 'price', 0));
+            $instance->setCostPrice((float) static::readAttribute($model, 'cost_price', 0));
+            $instance->setRetailPrice((float) static::readAttribute($model, 'retail_price', 0));
+            $instance->setSalePrice((float) static::readAttribute($model, 'sale_price'));
+            $instance->setDescription((string) static::readAttribute($model, 'description'));
+            $instance->setType((string) static::readAttribute($model, 'type'));
             $instance->setWeight((float) static::readAttribute($model, 'weight', 0));
             $instance->setWidth((float) static::readAttribute($model, 'width', 0));
             $instance->setHeight((float) static::readAttribute($model, 'height', 0));
             $instance->setDepth((float) static::readAttribute($model, 'depth', 0));
+            $instance->setTaxClassId((int) static::readAttribute($model, 'tax_class_id'));
+            $instance->setTaxCode((string) static::readAttribute($model, 'product_tax_code '));
+            $categoriesIds = static::readAttribute($model, 'categories', []);
             
-            $variants = array_map(function ($variantModel) {
-                return ProductVariant::fromBigCommerce($variantModel);
-            }, static::readAttribute($model, 'variants', []));
+            if (is_array($categoriesIds)) {
+                $instance->addCategoryIds(...$categoriesIds);
+            }
             
-            $instance->addVariants(...$variants);
+            $instance->setBrandId((int) static::readAttribute($model, 'brand_id'));
+            $instance->setInventoryLevel((int) static::readAttribute($model, 'inventory_level'));
+            $instance->setInventoryWarningLevel((int) static::readAttribute($model, 'inventory_warning_level'));
+            $instance->setInventoryTracking((string) static::readAttribute($model, 'inventory_tracking'));
+            $instance->setFixedCostShippingPrice((float) static::readAttribute($model, 'fixed_cost_shipping_price'));
+            $instance->setIsFreeShipping(true === static::readAttribute($model, 'is_free_shipping', false));
+            $instance->setIsVisible(true === static::readAttribute($model, 'is_visible', false));
+            $instance->setIsFeatured(true === static::readAttribute($model, 'is_featured', false));
             
-            $images = array_map(function ($imageModel) {
-                return Image::fromBigCommerce($imageModel);
-            }, static::readAttribute($model, 'images', []));
+            $relatedProductModelArray = static::readAttribute($model, 'related_products', []);
             
-            $instance->addImages(...$images);
+            if (is_array($relatedProductModelArray)) {
+                $instance->addRelatedProductIds(...$relatedProductModelArray);
+            }
+            
+            $instance->setWarranty((string) static::readAttribute($model, 'warranty'));
+            $instance->setBinPickingNumber((string) static::readAttribute($model, 'bin_picking_number'));
+            $instance->setLayoutFile((string) static::readAttribute($model, 'layout_file'));
+            $instance->setUPC((string) static::readAttribute($model, 'upc'));
+            $instance->setSearchKeywords((string) static::readAttribute($model, 'search_keywords'));
+            $instance->setAvailability((string) static::readAttribute($model, 'availability'));
+            $instance->setAvailabilityDescription((string) static::readAttribute($model, 'availability_description'));
+            $instance->setGiftWrappingOptionType((string) static::readAttribute($model, 'gift_wrapping_options_type'));
+            
+            $giftListArray = static::readAttribute($model, 'gift_wrapping_options_list', []);
+            
+            if (is_array($giftListArray)) {
+                $instance->addGiftWrappingOptionList(...$giftListArray);
+            }
+            
+            $instance->setSortOrder((int) static::readAttribute($model, 'sort_order'));
+            $instance->setCondition((string) static::readAttribute($model, 'condition'));
+            
+            $instance->setIsConditionShown(true === static::readAttribute($model, 'is_condition_shown', false));
+            $instance->setMinimumOrderQuantity((int) static::readAttribute($model, 'order_quantity_minimum'));
+            $instance->setMaximumOrderQuantity((int) static::readAttribute($model, 'order_quantity_maximum'));
+            $instance->setPageTitle((string) static::readAttribute($model, 'page_title'));
+            
+            $metaKeywordsArray = static::readAttribute($model, 'meta_keywords', []);
+            
+            if (is_array($metaKeywordsArray)) {
+                $instance->addMetaKeywords(...$metaKeywordsArray);
+            }
+            
+            $instance->setMetaDescription((string) static::readAttribute($model, 'meta_description'));
+            $instance->setViewCount((int) static::readAttribute($model, 'view_count'));
+            
+            $preorderDate = DateTime::createFromFormat(DateTime::RSS, (string) static::readAttribute($model, 'preorder_release_date'));
+            if (false !== $preorderDate) {
+                $instance->setPreorderReleaseDate($preorderDate);
+            }
+            
+            $instance->setPreorderMessage((string) static::readAttribute($model, 'preorder_message'));
+            $instance->setIsPreorderOnly(true === static::readAttribute($model, 'is_preorder_only', false));
+            $instance->setIsPriceHidden(true === static::readAttribute($model, 'is_price_hidden', false));
+            $instance->setPriceHiddenLabel((string) static::readAttribute($model, 'price_hidden_label'));
+            
+            $customUrlModel = static::readAttribute($model, 'custom_url');
+            if (null !== $customUrlModel) {
+                $instance->setCustomUrl(CustomUrl::fromBigCommerce(static::readAttribute($model, 'custom_url')));
+            }
+            
+            $customFieldsArray = static::readAttribute($model, 'custom_fields', []);
+            
+            if (is_array($customFieldsArray)) {
+                $customFields = array_map(function ($customFieldModel) {
+                    return CustomField::fromBigCommerce($customFieldModel);
+                }, $customFieldsArray);
+                
+                $instance->addCustomFields(...$customFields);
+            }
+            
+            $bulkPricingRuleArray = static::readAttribute($model, 'bulk_pricing_rules', []);
+            if (is_array($bulkPricingRuleArray)) {
+                $bulkPricingRules = array_map(function ($ruleModel) {
+                    return BulkPricingRule::fromBigCommerce($ruleModel);
+                }, $bulkPricingRuleArray);
+                
+                $instance->addBulkPricingRules(...$bulkPricingRules);
+            }
+            
+            $variantModelArray = static::readAttribute($model, 'variants', []);
+            
+            if (is_array($variantModelArray)) {
+                $variants = array_map(function ($variantModel) {
+                    return ProductVariant::fromBigCommerce($variantModel);
+                }, $variantModelArray);
+                
+                $instance->addVariants(...$variants);
+            }
+            
+            $imageModelArray = static::readAttribute($model, 'images', []);
+            
+            if (is_array($imageModelArray)) {
+                $images = array_map(function ($imageModel) {
+                    return Image::fromBigCommerce($imageModel);
+                }, $imageModelArray);
+                
+                $instance->addImages(...$images);
+            }
         }
         
         return $instance;

@@ -37,9 +37,20 @@ class ProductVariant extends Product
 
     public function __construct()
     {
-        parent::__construct();
+        $unneededFields = array(
+            'type',
+            'variants',
+            'categories',
+            'description',
+            'name',
+            'bulk_pricing_rules',
+            'custom_fields',
+            'related_products'
+        );
         
-        unset($this->type, $this->variants, $this->categories, $this->description, $this->name);
+        foreach ($unneededFields as $field) {
+            unset($this->{$field});
+        }
     }
 
     /**

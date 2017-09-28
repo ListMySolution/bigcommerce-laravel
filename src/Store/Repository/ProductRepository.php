@@ -27,7 +27,8 @@ class ProductRepository extends BaseRepository
         $limit = 1000;
         $includes = array(
             'variants',
-            'images'
+            'images',
+            'bulk_pricing_rules'
         );
         
         do {
