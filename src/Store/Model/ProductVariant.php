@@ -35,13 +35,9 @@ class ProductVariant extends Product
      */
     protected $option_values = [];
 
-    public function __construct(\stdClass $model = null)
+    public function __construct()
     {
-        parent::__construct($model);
-        
-        if (null !== $model) {
-            $this->setProductId(static::readAttribute($model, 'product_id'));
-        }
+        parent::__construct();
         
         unset($this->type, $this->variants, $this->categories, $this->description, $this->name);
     }
