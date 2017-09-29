@@ -103,7 +103,7 @@ class CustomerRepository extends BaseRepository
      */
     public function delete(Customer ...$customers): void
     {
-        return $this->deleteByIds(array_map(function (Customer $customer) {
+        return $this->deleteByIds(...array_map(function (Customer $customer) {
             return $customer->getId();
         }, $customers));
     }
