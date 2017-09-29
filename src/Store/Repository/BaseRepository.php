@@ -5,6 +5,7 @@ namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 use GuzzleHttp\Psr7\Response;
 use Maverickslab\BigCommerce\BigCommerce;
 use Maverickslab\Integration\BigCommerce\Store\Repository\Writer\RepositoryWriterInterface;
+use Maverickslab\Integration\BigCommerce\Store\Repository\Writer\RepositoryWriter;
 use stdClass;
 
 /**
@@ -28,11 +29,11 @@ abstract class BaseRepository
      */
     protected $repositoryWriter;
 
-    public function __construct(BigCommerce $bigCommerce, RepositoryWriterInterface $repositoryWriter)
+    public function __construct(BigCommerce $bigCommerce, ?RepositoryWriterInterface $repositoryWriter)
     {
-        $this->bigCommerce = $bigCommerce;
+        $this->bigCommerce = $bigCommerce; 
         
-        $this->repositoryWriter = $repositoryWriter;
+        $this->repositoryWriter = null === $repositoryWriter ? new RepositoryWriter() : $repositoryWriter;
     }
 
     /**
