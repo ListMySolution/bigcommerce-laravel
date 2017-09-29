@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 
 use Maverickslab\Integration\BigCommerce\Store\Model\Customer;
+use Maverickslab\Integration\BigCommerce\Store\Model\CustomerAddress;
 
 /**
  * Customer repository
@@ -25,6 +26,8 @@ class CustomerRepository extends BaseRepository
         $limit = 1000;
         $customers = [];
         
+        $addressPromises = [];
+        
         do {
             $response = $this->bigCommerce->customer()
                 ->fetch($page ++, $limit)
@@ -35,11 +38,28 @@ class CustomerRepository extends BaseRepository
             
             if (is_array($responseData->data)) {
                 foreach ($responseData->data as $customerModel) {
-                    $customers[] = Customer::fromBigCommerce($customerModel);
+                    $customer = Customer::fromBigCommerce($customerModel);
+                    $customers[$customer->getId()] = $customer;
+                    $addressPromises[$customer->getId()] = $this->bigCommerce->customer()->fetchAddresses($customer->getId());
                 }
             }
         } while ($page <= $totalPages);
         
+        $addressResponses = $this->bigCommerce->customer()
+            ->resolvePromises($addressPromises)
+            ->wait();
+        
+        foreach ($addressResponses as $customerId => $addressResponse) {
+            $addressResponseData = $this->decodeResponse($addressResponse);
+            
+            if (is_array($addressResponseData->data)) {
+                $addreses = array_map(function ($addressModel) {
+                    return CustomerAddress::fromBigCommerce($addressModel);
+                }, $addressResponseData->data);
+                
+                $customers[$customerId]->addAddresses(...$addreses);
+            }
+        }
         return $customers;
     }
 
@@ -96,14 +116,14 @@ class CustomerRepository extends BaseRepository
     }
 
     /**
-     * Delete a collection of customer on BigCommerce
+     * Deletes a collection of customer on BigCommerce
      *
      * @param Customer ...$customers
      * @return void
      */
     public function delete(Customer ...$customers): void
     {
-        return $this->deleteByIds(...array_map(function (Customer $customer) {
+        $this->deleteByIds(...array_map(function (Customer $customer) {
             return $customer->getId();
         }, $customers));
     }
