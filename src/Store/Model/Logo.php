@@ -22,13 +22,18 @@ class Logo extends BaseModel
      */
     protected $mobile_url;
 
+    /**
+     * Returns logo url
+     *
+     * @return string|NULL
+     */
     public function getUrl(): ?string
     {
         return $this->url;
     }
 
     /**
-     * Returns url
+     * Sets logo url
      *
      * @param string $url
      * @return self

@@ -22,9 +22,19 @@ abstract class BaseModel implements \JsonSerializable
      */
     public function toArray()
     {
-        return array_filter(get_object_vars($this), function ($value) {
-            return is_array($value) ? ! empty($value) : isset($value);
+        $filteredProperties = get_object_vars($this);
+        
+        array_walk_recursive($filteredProperties, function (&$value) {
+            if ($value instanceof self) {
+                $value = $value->toArray();
+            }
+            
+            if ($value instanceof \DateTime) {
+                $value = $value->format(\DateTime::RSS);
+            }
         });
+        
+        return $filteredProperties;
     }
 
     /**
@@ -35,7 +45,34 @@ abstract class BaseModel implements \JsonSerializable
      */
     public function toBigCommerceEntity(): array
     {
-        return $this->toArray();
+        $entityArray = $this->toArray();
+        
+        $this->propertyUnsetter($entityArray);
+        
+        return $entityArray;
+    }
+
+    /**
+     * Removes un-needed properties from a given array
+     *
+     * @param array $arrayData
+     */
+    protected function propertyUnsetter(array &$arrayData)
+    {
+        foreach ($arrayData as $key => &$subData) {
+            if (is_array($subData)) {
+                
+                $this->propertyUnsetter($subData);
+                
+                if (empty($subData)) {
+                    unset($arrayData[$key]);
+                }
+            } else {
+                if (is_null($subData) || (is_string($subData) && empty($subData))) {
+                    unset($arrayData[$key]);
+                }
+            }
+        }
     }
 
     /**

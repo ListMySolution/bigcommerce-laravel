@@ -37,9 +37,9 @@ class ProductOptionValue extends BaseModel
     /**
      * Returns option value Id
      *
-     * @return int
+     * @return int|NULL
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -50,7 +50,7 @@ class ProductOptionValue extends BaseModel
      * @param int $id
      * @return self
      */
-    public function setId(int $id): self
+    public function setId(?int $id): self
     {
         $this->id = $id;
         
@@ -60,9 +60,9 @@ class ProductOptionValue extends BaseModel
     /**
      * Returns option Id
      *
-     * @return int
+     * @return int|NULL
      */
-    public function getOptionId(): int
+    public function getOptionId(): ?int
     {
         return $this->option_id;
     }
@@ -73,7 +73,7 @@ class ProductOptionValue extends BaseModel
      * @param int $optionId
      * @return self
      */
-    public function setOptionId(int $optionId): self
+    public function setOptionId(?int $optionId): self
     {
         $this->option_id = $optionId;
         
@@ -83,9 +83,9 @@ class ProductOptionValue extends BaseModel
     /**
      * Returns option value label
      *
-     * @return string
+     * @return string|NULL
      */
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -96,7 +96,7 @@ class ProductOptionValue extends BaseModel
      * @param string $label
      * @return self
      */
-    public function setLabel(string $label): self
+    public function setLabel(?string $label): self
     {
         $this->label = $label;
         
@@ -106,9 +106,9 @@ class ProductOptionValue extends BaseModel
     /**
      * Returns option display name
      *
-     * @return string
+     * @return string|NULL
      */
-    public function getOptionDisplayName(): string
+    public function getOptionDisplayName(): ?string
     {
         return $this->option_display_name;
     }
@@ -119,10 +119,30 @@ class ProductOptionValue extends BaseModel
      * @param string $name
      * @return self
      */
-    public function setOptionDisplayName(string $name): self
+    public function setOptionDisplayName(?string $name): self
     {
         $this->option_display_name = $name;
         
         return $this;
+    }
+
+    /**
+     * Creates an instance of this class from a BigCommerce entity/model
+     *
+     * @param mixed $model
+     * @return self
+     */
+    public static function fromBigCommerce($model = null)
+    {
+        $instance = new static();
+        
+        if (null !== $model) {
+            $instance->setId((int) static::readAttribute($model, 'id'));
+            $instance->setLabel((string) static::readAttribute($model, 'label'));
+            $instance->setOptionDisplayName((string) static::readAttribute($model, 'option_display_name'));
+            $instance->setOptionId((int) static::readAttribute($model, 'option_id'));
+        }
+        
+        return $instance;
     }
 }

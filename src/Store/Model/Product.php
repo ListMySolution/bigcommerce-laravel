@@ -90,6 +90,12 @@ class Product extends BaseModel
      * @var float
      */
     protected $price;
+    
+    /**
+     * 
+     * @var float
+     */
+    protected $calculated_price;
 
     /**
      *
@@ -251,7 +257,7 @@ class Product extends BaseModel
      *
      * @var int
      */
-    protected $sort_order = 0;
+    protected $sort_order;
 
     /**
      *
@@ -373,7 +379,9 @@ class Product extends BaseModel
      */
     public function setId(?int $id): self
     {
-        $this->id = $id;
+        if ($id) {
+            $this->id = $id;
+        }
         
         return $this;
     }
@@ -497,7 +505,9 @@ class Product extends BaseModel
      */
     public function setWeight(?float $weight): self
     {
-        $this->weight = $weight;
+        if ($weight) {
+            $this->weight = $weight;
+        }
         
         return $this;
     }
@@ -520,7 +530,9 @@ class Product extends BaseModel
      */
     public function setWidth(?float $width): self
     {
-        $this->width = $width;
+        if ($width) {
+            $this->width = $width;
+        }
         
         return $this;
     }
@@ -543,7 +555,9 @@ class Product extends BaseModel
      */
     public function setHeight(?float $height): self
     {
-        $this->height = $height;
+        if ($height) {
+            $this->height = $height;
+        }
         
         return $this;
     }
@@ -566,7 +580,9 @@ class Product extends BaseModel
      */
     public function setDepth(?float $depth): self
     {
-        $this->depth = $depth;
+        if ($depth) {
+            $this->depth = $depth;
+        }
         
         return $this;
     }
@@ -589,10 +605,38 @@ class Product extends BaseModel
      */
     public function setPrice(?float $price): self
     {
-        $this->price = $price;
+        if ($price) {
+            $this->price = $price;
+        }
         
         return $this;
     }
+    
+    /**
+     * Returns product calculated price
+     *
+     * @return float|NULL
+     */
+    public function getCalculatedPrice(): ?float
+    {
+        return $this->calculated_price;
+    }
+    
+    /**
+     * Sets product calculated price
+     *
+     * @param float $price
+     * @return self
+     */
+    public function setCalculatedPrice(?float $price): self
+    {
+        if ($price) {
+            $this->calculated_price = $price;
+        }
+        
+        return $this;
+    }
+    
 
     /**
      * Returns product cost price
@@ -612,7 +656,9 @@ class Product extends BaseModel
      */
     public function setCostPrice(?float $price): self
     {
-        $this->cost_price = $price;
+        if ($price) {
+            $this->cost_price = $price;
+        }
         
         return $this;
     }
@@ -635,7 +681,9 @@ class Product extends BaseModel
      */
     public function setRetailPrice(?float $price): self
     {
-        $this->retail_price = $price;
+        if ($price) {
+            $this->retail_price = $price;
+        }
         
         return $this;
     }
@@ -658,7 +706,9 @@ class Product extends BaseModel
      */
     public function setSalePrice(?float $price): self
     {
-        $this->sale_price = $price;
+        if ($price) {
+            $this->sale_price = $price;
+        }
         
         return $this;
     }
@@ -812,7 +862,9 @@ class Product extends BaseModel
      */
     public function setTaxClassId(?int $id): self
     {
-        $this->tax_class_id = $id;
+        if ($id) {
+            $this->tax_class_id = $id;
+        }
         
         return $this;
     }
@@ -858,7 +910,9 @@ class Product extends BaseModel
      */
     public function setBrandId(?int $id): self
     {
-        $this->brand_id = $id;
+        if ($id) {
+            $this->brand_id = $id;
+        }
         
         return $this;
     }
@@ -881,7 +935,9 @@ class Product extends BaseModel
      */
     public function setInventoryLevel(?int $level): self
     {
-        $this->inventory_level = $level;
+        if ($level) {
+            $this->inventory_level = $level;
+        }
         
         return $this;
     }
@@ -904,7 +960,9 @@ class Product extends BaseModel
      */
     public function setInventoryWarningLevel(?int $warningLevel): self
     {
-        $this->inventory_warning_level = $warningLevel;
+        if ($warningLevel) {
+            $this->inventory_warning_level = $warningLevel;
+        }
         
         return $this;
     }
@@ -950,7 +1008,9 @@ class Product extends BaseModel
      */
     public function setFixedCostShippingPrice(?float $price): self
     {
-        $this->fixed_cost_shipping_price = $price;
+        if ($price) {
+            $this->fixed_cost_shipping_price = $price;
+        }
         
         return $this;
     }
@@ -1275,7 +1335,9 @@ class Product extends BaseModel
      */
     public function setSortOrder(?int $order): self
     {
-        $this->sort_order = $order;
+        if ($order) {
+            $this->sort_order = $order;
+        }
         
         return $this;
     }
@@ -1351,7 +1413,9 @@ class Product extends BaseModel
      */
     public function setMinimumOrderQuantity(?int $quantity): self
     {
-        $this->order_quantity_minimum = $quantity;
+        if ($quantity) {
+            $this->order_quantity_minimum = $quantity;
+        }
         
         return $this;
     }
@@ -1374,7 +1438,9 @@ class Product extends BaseModel
      */
     public function setMaximumOrderQuantity(?int $quantity): self
     {
-        $this->order_quantity_maximum = $quantity;
+        if ($quantity) {
+            $this->order_quantity_maximum = $quantity;
+        }
         
         return $this;
     }
@@ -1465,7 +1531,9 @@ class Product extends BaseModel
      */
     public function setViewCount(?int $views): self
     {
-        $this->view_count = $views;
+        if ($views) {
+            $this->view_count = $views;
+        }
         
         return $this;
     }
@@ -1673,6 +1741,7 @@ class Product extends BaseModel
             $instance->setName(static::readAttribute($model, 'name'));
             $instance->setSKU(static::readAttribute($model, 'sku'));
             $instance->setPrice((float) static::readAttribute($model, 'price', 0));
+            $instance->setCalculatedPrice((float) static::readAttribute($model, 'calculated_price', 0));
             $instance->setCostPrice((float) static::readAttribute($model, 'cost_price', 0));
             $instance->setRetailPrice((float) static::readAttribute($model, 'retail_price', 0));
             $instance->setSalePrice((float) static::readAttribute($model, 'sale_price'));

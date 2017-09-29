@@ -229,7 +229,9 @@ class Category extends BaseModel
      */
     public function setViews(?int $views): self
     {
-        $this->views = $views;
+        if ($views) {
+            $this->views = $views;
+        }
         
         return $this;
     }
