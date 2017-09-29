@@ -90,9 +90,9 @@ class Product extends BaseModel
      * @var float
      */
     protected $price;
-    
+
     /**
-     * 
+     *
      * @var float
      */
     protected $calculated_price;
@@ -611,7 +611,7 @@ class Product extends BaseModel
         
         return $this;
     }
-    
+
     /**
      * Returns product calculated price
      *
@@ -621,7 +621,7 @@ class Product extends BaseModel
     {
         return $this->calculated_price;
     }
-    
+
     /**
      * Sets product calculated price
      *
@@ -636,7 +636,6 @@ class Product extends BaseModel
         
         return $this;
     }
-    
 
     /**
      * Returns product cost price
@@ -822,7 +821,7 @@ class Product extends BaseModel
     /**
      * Returns product images
      *
-     * @return array
+     * @return Image[]
      */
     public function getImages(): array
     {
