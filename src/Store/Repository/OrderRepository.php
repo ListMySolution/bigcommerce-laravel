@@ -2,11 +2,13 @@
 declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 
-use Maverickslab\Integration\BigCommerce\Store\Model\Customer;
-use Maverickslab\Integration\BigCommerce\Store\Model\Order;
+use Maverickslab\Integration\BigCommerce\Store\Model\ {
+    Customer,
+    Order,
+    OrderStatus,
+    OrderedProduct
+};
 use DateTime;
-use Maverickslab\Integration\BigCommerce\Store\Model\OrderStatus;
-use Maverickslab\Integration\BigCommerce\Store\Model\Product;
 
 /**
  * Order repository
@@ -116,7 +118,7 @@ class OrderRepository extends BaseRepository
             
             if (is_array($productResponseData->data)) {
                 $products = array_map(function ($productModel) {
-                    return Product::fromBigCommerce($productModel);
+                    return OrderedProduct::fromBigCommerce($productModel);
                 }, $productResponseData->data);
                 
                 $orders[$orderId]->addProducts(...$products);

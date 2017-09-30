@@ -2,6 +2,9 @@
 declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Model;
 
+use DateTime;
+use Exception;
+
 abstract class BaseModel implements \JsonSerializable
 {
 
@@ -118,7 +121,7 @@ abstract class BaseModel implements \JsonSerializable
      * @param mixed $default
      * @return mixed
      */
-    public static function readAttribute($data, string $key, $default = null)
+    protected static function readAttribute($data, string $key, $default = null)
     {
         if (is_array($data)) {
             return array_key_exists($key, $data) ? $data[$key] : $default;
@@ -129,5 +132,24 @@ abstract class BaseModel implements \JsonSerializable
         }
         
         return $default;
+    }
+
+    /**
+     * Creates a new datetime instance from a given string
+     * 
+     * @param string $datetime
+     * @return DateTime|NULL
+     */
+    protected static function createDateTime(?string $datetime): ?DateTime
+    {
+        if (empty($datetime)) {
+            return null;
+        }
+        
+        try {
+            return new DateTime($datetime);
+        } catch (Exception $e) {
+            return null;
+        }
     }
 }

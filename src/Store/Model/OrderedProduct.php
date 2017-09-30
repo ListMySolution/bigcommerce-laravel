@@ -389,7 +389,7 @@ class OrderedProduct extends BaseModel
      * @param string $name
      * @return self
      */
-    public function setOrderId(?string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
         
@@ -456,7 +456,7 @@ class OrderedProduct extends BaseModel
      * @param float $price
      * @return self
      */
-    public function setOrderId(?float $price): self
+    public function setBasePrice(?float $price): self
     {
         if ($price) {
             $this->base_price = $price;
@@ -732,7 +732,7 @@ class OrderedProduct extends BaseModel
      * @param float $price
      * @return self
      */
-    public function setCostPriceIncluding(?float $price): self
+    public function setCostPriceIncludingTax(?float $price): self
     {
         if ($price) {
             $this->cost_price_inc_tax = $price;
@@ -870,7 +870,9 @@ class OrderedProduct extends BaseModel
      */
     public function setWrappingName(?string $name): self
     {
-        $this->wrapping_name = $name;
+        if ($name) {
+            $this->wrapping_name = $name;
+        }
         
         return $this;
     }
@@ -983,7 +985,9 @@ class OrderedProduct extends BaseModel
      */
     public function setWrappingMessage(?string $message): self
     {
-        $this->base_price = $price;
+        if ($message) {
+            $this->wrapping_message = $message;
+        }
         
         return $this;
     }
@@ -1057,7 +1061,7 @@ class OrderedProduct extends BaseModel
      *
      * @return float|NULL
      */
-    public function getFixedShippingCostPrice(): ?float
+    public function getFixedShippingCost(): ?float
     {
         return $this->fixed_shipping_cost;
     }
@@ -1067,7 +1071,7 @@ class OrderedProduct extends BaseModel
      * @param float $price
      * @return self
      */
-    public function setFixedShippingCostPrice(?float $price): self
+    public function setFixedShippingCost(?float $price): self
     {
         if ($price) {
             $this->fixed_shipping_cost = $price;
@@ -1092,7 +1096,9 @@ class OrderedProduct extends BaseModel
      */
     public function setEbayItemId(?string $id): self
     {
-        $this->ebay_item_id = $id;
+        if ($id) {
+            $this->ebay_item_id = $id;
+        }
         
         return $this;
     }
@@ -1113,7 +1119,9 @@ class OrderedProduct extends BaseModel
      */
     public function setEbayTransactionId(?string $id): self
     {
-        $this->ebay_transaction_id = $id;
+        if ($id) {
+            $this->ebay_transaction_id = $id;
+        }
         
         return $this;
     }
@@ -1201,7 +1209,9 @@ class OrderedProduct extends BaseModel
      */
     public function setBindKeepingNumber(?string $binNumber): self
     {
-        $this->bin_picking_number = $binNumber;
+        if ($binNumber) {
+            $this->bin_picking_number = $binNumber;
+        }
         
         return $this;
     }
@@ -1296,5 +1306,89 @@ class OrderedProduct extends BaseModel
         }
         
         return $this;
+    }
+
+    /**
+     * Creates an instance of this class from a BigCommerce entity/model
+     *
+     * @param mixed $model
+     * @return self
+     */
+    public static function fromBigCommerce($model = null)
+    {
+        $instance = new static();
+        
+        if (null !== $model) {
+            $instance->setId((int) static::readAttribute($model, 'id'));
+            $instance->setOrderId((int) static::readAttribute($model, 'order_id'));
+            $instance->setOrderAddressId((int) static::readAttribute($model, 'order_address_id'));
+            $instance->setProductId((int) static::readAttribute($model, 'product_id'));
+            $instance->setName((string) static::readAttribute($model, 'name'));
+            $instance->setSKU((string) static::readAttribute($model, 'sku'));
+            $instance->setType((string) static::readAttribute($model, 'type'));
+            $instance->setBasePrice((float) static::readAttribute($model, 'base_price'));
+            $instance->setPriceExcludingTax((float) static::readAttribute($model, 'price_ex_tax'));
+            $instance->setPriceIncludingTax((float) static::readAttribute($model, 'price_inc_tax'));
+            $instance->setPriceTax((float) static::readAttribute($model, 'price_tax'));
+            $instance->setBaseTotal((float) static::readAttribute($model, 'base_total'));
+            $instance->setTotalExcludingTax((float) static::readAttribute($model, 'total_ex_tax'));
+            $instance->setTotalIncludingTax((float) static::readAttribute($model, 'total_inc_tax'));
+            $instance->setTotalTax((float) static::readAttribute($model, 'total_tax'));
+            $instance->setWeight((float) static::readAttribute($model, 'weight'));
+            $instance->setQuantity((int) static::readAttribute($model, 'quantity'));
+            $instance->setBaseCostPrice((float) static::readAttribute($model, 'base_cost_price'));
+            $instance->setCostPriceExcludingTax((float) static::readAttribute($model, 'cost_price_ex_tax'));
+            $instance->setCostPriceIncludingTax((float) static::readAttribute($model, 'cost_price_inc_tax'));
+            $instance->setCostPriceTax((float) static::readAttribute($model, 'cost_price_tax'));
+            $instance->setIsRefunded(true === static::readAttribute($model, 'is_refunded'));
+            $instance->setQuantityRefunded((int) static::readAttribute($model, 'quantity_refunded'));
+            $instance->setAmountRefunded((float) static::readAttribute($model, 'refund_amount'));
+            $instance->setReturnId((int) static::readAttribute($model, 'return_id'));
+            $instance->setWrappingName((string) static::readAttribute($model, 'wrapping_name'));
+            $instance->setBaseWrappingCost((float) static::readAttribute($model, 'base_wrapping_cost'));
+            $instance->setWrappingCostExcludingTax((float) static::readAttribute($model, 'wrapping_cost_ex_tax'));
+            $instance->setWrappingCostIncludingTax((float) static::readAttribute($model, 'wrapping_cost_inc_tax'));
+            $instance->setWrappingCostTax((float) static::readAttribute($model, 'wrapping_cost_tax'));
+            $instance->setWrappingMessage((string) static::readAttribute($model, 'wrapping_message'));
+            $instance->setQuantityShipped((int) static::readAttribute($model, 'quantity_shipped'));
+            $instance->setEventName((string) static::readAttribute($model, 'event_name'));
+            $instance->setEventDate(static::createDateTime((string) static::readAttribute($model, 'event_date')));
+            $instance->setFixedShippingCost((float) static::readAttribute($model, 'fixed_Shipping_cost'));
+            $instance->setEbayItemId((string) static::readAttribute($model, 'ebay_item_id'));
+            $instance->setEbayTransactionId((string) static::readAttribute($model, 'ebay_transaction_id'));
+            $instance->setOptionSetId((int) static::readAttribute($model, 'option_set_id'));
+            $instance->setParentOrderProductId((int) static::readAttribute($model, 'parent_order_product_id'));
+            $instance->setIsBundledProduct(false === static::readAttribute($model, 'is_bundled_product'));
+            $instance->setBindKeepingNumber((string) static::readAttribute($model, 'bin_picking_number'));
+            $instance->setExternalId((int) static::readAttribute($model, 'external_id'));
+            
+            $appliedDiscountArray = static::readAttribute($model, 'applied_discounts', []);
+            
+            if (is_array($appliedDiscountArray)) {
+                $appliedDiscounts = array_map(function ($discountModel) {
+                    return AppliedDiscount::fromBigCommerce($discountModel);
+                }, $appliedDiscountArray);
+                
+                $instance->addAppliedDiscounts(...$appliedDiscounts);
+            }
+            
+            $productOptionArray = static::readAttribute($model, 'product_options', []);
+            
+            if (is_array($productOptionArray)) {
+                $productOptions = array_map(function ($optionModel) {
+                    return ProductOption::fromBigCommerce($optionModel);
+                }, $productOptionArray);
+                
+                $instance->addProductOptions(...$productOptions);
+            }
+            
+            $configurableFields = static::readAttribute($model, 'configurable_fields', []);
+            
+            if (is_array($configurableFields)) {
+                $instance->addConfigurations(...$configurableFields);
+            }
+        }
+        
+        return $instance;
     }
 }

@@ -365,7 +365,7 @@ class Order extends BaseModel
 
     /**
      *
-     * @var Product[]
+     * @var OrderedProduct[]
      */
     protected $products = [];
 
@@ -1717,7 +1717,7 @@ class Order extends BaseModel
     /**
      * Returns products in order
      *
-     * @return Product[]
+     * @return OrderedProduct[]
      */
     public function getProducts(): array
     {
@@ -1727,10 +1727,10 @@ class Order extends BaseModel
     /**
      * Adds products to order
      *
-     * @param Product ...$products
+     * @param OrderedProduct ...$products
      * @return self
      */
-    public function addProducts(Product ...$products): self
+    public function addProducts(OrderedProduct ...$products): self
     {
         foreach ($products as $product) {
             $this->products[] = $product;
@@ -1923,7 +1923,7 @@ class Order extends BaseModel
             
             if (is_array($productModelArray) && count($productModelArray) > 0) {
                 $products = array_map(function ($productModel) {
-                    return Product::fromBigCommerce($productModelArray);
+                    return OrderedProduct::fromBigCommerce($productModelArray);
                 }, $productModelArray);
                 
                 $instance->addProducts(...$products);
