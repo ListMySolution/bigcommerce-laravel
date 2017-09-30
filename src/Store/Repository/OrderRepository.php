@@ -5,6 +5,8 @@ namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 use Maverickslab\Integration\BigCommerce\Store\Model\Customer;
 use Maverickslab\Integration\BigCommerce\Store\Model\Order;
 use DateTime;
+use Maverickslab\Integration\BigCommerce\Store\Model\OrderStatus;
+use Maverickslab\Integration\BigCommerce\Store\Model\Product;
 
 /**
  * Order repository
@@ -63,6 +65,7 @@ class OrderRepository extends BaseRepository
         $page = 1;
         $itemsReturnedForCurrentRequest = 0;
         $customerPromises = [];
+        $productPromises = [];
         
         do {
             $response = $this->bigCommerce->order()
@@ -78,9 +81,11 @@ class OrderRepository extends BaseRepository
                     $order = Order::fromBigCommerce($orderModel);
                     
                     $orders[$order->getId()] = $order;
-                    // BIGCOMMERCE DOES NOT INCLUDE FULL CUSTOMER DETAILS IN ORDER REQUEST, SO WE HAVE TO FIND A WAY TO FETCH
+                    // BIGCOMMERCE DOES NOT INCLUDE FULL CUSTOMER DETAILS AND PRODDUCTS IN ORDER REQUEST, SO WE HAVE TO FIND A WAY TO FETCH
                     // THEM SUBSEQUENT REQUEST
                     $customerPromises[$order->getId()] = $this->bigCommerce->customer()->fetchById($order->getCustomerId());
+                    
+                    $productPromises[$order->getId()] = $this->bigCommerce->order()->fetchOrderedProducts($order->getId(), 1, $limit);
                 }
             } else {
                 // A 204 - No content- may have been returned.
@@ -90,13 +95,32 @@ class OrderRepository extends BaseRepository
         } while ($limit == $itemsReturnedForCurrentRequest);
         
         // FETCH CUSTOMERS FULL DETAILS
-        $customerResponses = $this->bigCommerce->customer()
-            ->resolvePromises($customerPromises)
+        $finalCustomerResponses = $this->bigCommerce->customer()->resolvePromises($customerPromises);
+        
+        $finalProductsPromises = $this->bigCommerce->order()->resolvePromises($productPromises);
+        
+        $finalResponses = $this->bigCommerce->order()
+            ->resolvePromises([
+            $finalCustomerResponses,
+            $finalProductsPromises
+        ])
             ->wait();
         
-        foreach ($customerResponses as $orderId => $customerResponse) {
+        foreach ($finalResponses[0] as $orderId => $customerResponse) {
             $customerResponseData = $this->decodeResponse($customerResponse);
             $orders[$orderId]->setCustomer(Customer::fromBigCommerce($customerResponseData->data));
+        }
+        
+        foreach ($finalResponses[1] as $orderId => $productResponse) {
+            $productResponseData = $this->decodeResponse($productResponse);
+            
+            if (is_array($productResponseData->data)) {
+                $products = array_map(function ($productModel) {
+                    return Product::fromBigCommerce($productModel);
+                }, $productResponseData->data);
+                
+                $orders[$orderId]->addProducts(...$products);
+            }
         }
         
         return $orders;
@@ -126,6 +150,37 @@ class OrderRepository extends BaseRepository
         }
         
         return $updatedOrders;
+    }
+
+    /**
+     * Imports all order statuses from BigCommerce
+     *
+     * @return OrderStatus[]
+     */
+    public function importStatuses(): array
+    {
+        $limit = 250;
+        $statuses = [];
+        $page = 1;
+        $itemsReturnedForCurrentRequest = 0;
+        
+        do {
+            $response = $this->bigCommerce->order()
+                ->fetchOrderStatuses()
+                ->wait();
+            
+            $responseData = $this->decodeResponse($response);
+            
+            if (is_array($responseData->data)) {
+                $itemsReturnedForCurrentRequest = count($responseData->data);
+                
+                foreach ($responseData->data as $statusModel) {
+                    $statuses[] = OrderStatus::fromBigCommerce($statusModel);
+                }
+            }
+        } while ($limit === $itemsReturnedForCurrentRequest);
+        
+        return $statuses;
     }
 
     /**

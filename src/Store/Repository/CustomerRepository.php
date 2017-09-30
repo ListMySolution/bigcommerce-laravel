@@ -22,9 +22,9 @@ class CustomerRepository extends BaseRepository
     public function import(): array
     {
         $page = 1;
-        $totalPages = 0;
         $limit = 1000;
         $customers = [];
+        $itemsReturnedForCurrentRequest = 0;
         
         $addressPromises = [];
         
@@ -34,16 +34,18 @@ class CustomerRepository extends BaseRepository
                 ->wait();
             
             $responseData = $this->decodeResponse($response);
-            $totalPages = $responseData->meta->pagination->total_pages;
             
             if (is_array($responseData->data)) {
+                
+                $itemsReturnedForCurrentRequest = count($responseData->data);
+                
                 foreach ($responseData->data as $customerModel) {
                     $customer = Customer::fromBigCommerce($customerModel);
                     $customers[$customer->getId()] = $customer;
                     $addressPromises[$customer->getId()] = $this->bigCommerce->customer()->fetchAddresses($customer->getId());
                 }
             }
-        } while ($page <= $totalPages);
+        } while ($limit === $itemsReturnedForCurrentRequest);
         
         $addressResponses = $this->bigCommerce->customer()
             ->resolvePromises($addressPromises)
