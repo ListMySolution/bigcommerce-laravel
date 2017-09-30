@@ -62,7 +62,7 @@ class CustomerRepository extends BaseRepository
                 $customers[$customerId]->addAddresses(...$addreses);
             }
         }
-        return $customers;
+        return array_values($customers);
     }
 
     /**

@@ -125,7 +125,7 @@ class OrderRepository extends BaseRepository
             }
         }
         
-        return $orders;
+        return array_values($orders);
     }
 
     /**
