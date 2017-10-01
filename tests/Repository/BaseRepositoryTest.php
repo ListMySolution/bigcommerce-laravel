@@ -9,9 +9,18 @@ use Maverickslab\Integration\BigCommerce\Store\Repository\Writer\RepositoryWrite
 use Maverickslab\Integration\BigCommerce\Store\Repository\Writer\RepositoryWriterInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 
 class BaseRepositoryTest extends TestCase
 {
+
+    /**
+     *
+     * @var array
+     */
+    protected $responseHeaders = array(
+        'Content-Type' => 'application/json'
+    );
 
     /**
      *
@@ -70,6 +79,33 @@ class BaseRepositoryTest extends TestCase
         $this->repositoryWriter = null;
         
         $this->mockHandler = null;
+    }
+
+    /**
+     * Decodes json content of a given response
+     *
+     * @param Response $response
+     * @return \stdClass|NULL
+     */
+    protected function responseToJson(Response $response = null): ?\stdClass
+    {
+        $json = null;
+        
+        if (null !== $response) {
+            $json = json_decode($response->getBody()->getContents());
+        }
+        
+        return $json;
+    }
+
+    /**
+     *
+     * @param string $file
+     * @return string
+     */
+    protected function readResponseFile(string $file): string
+    {
+        return file_get_contents(dirname(__DIR__) . '/responses/' . $file);
     }
 
     public function testBigCommerceClient()

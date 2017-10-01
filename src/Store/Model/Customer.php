@@ -269,7 +269,7 @@ class Customer extends BaseModel
      * @param DateTime $datetime
      * @return self
      */
-    public function setDateCreated(DateTime $datetime): self
+    public function setDateCreated(?DateTime $datetime): self
     {
         $this->date_created = $datetime;
         
@@ -503,17 +503,9 @@ class Customer extends BaseModel
             $instance->setEmail(static::readAttribute($model, 'email'));
             $instance->setPhone(static::readAttribute($model, 'phone'));
             
-            $date_created = DateTime::createFromFormat(DateTime::RSS, static::readAttribute($model, 'date_created'));
+            $instance->setDateCreated(static::createDateTime(static::readAttribute($model, 'date_created')));
             
-            if (false !== $date_created) {
-                $instance->setDateCreated($date_created);
-            }
-            
-            $date_updated = DateTime::createFromFormat(DateTime::RSS, static::readAttribute($model, 'date_modified'));
-            
-            if (false !== $date_updated) {
-                $instance->setDateModified($date_updated);
-            }
+            $instance->setDateModified(static::createDateTime(static::readAttribute($model, 'date_modified')));
             
             $instance->setStoreCredit((float) static::readAttribute($model, 'store_credit', 0));
             $instance->setRegistrationIpAddress(static::readAttribute($model, 'registration_ip_address'));

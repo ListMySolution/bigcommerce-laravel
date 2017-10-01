@@ -389,17 +389,9 @@ class Image extends BaseModel
             $instance->setThumbnailUrl((string) static::readAttribute($model, 'url_thumbnail'));
             $instance->setTinyUrl((string) static::readAttribute($model, 'url_tiny'));
             
-            $dateCreated = DateTime::createFromFormat(DateTime::W3C, (string) static::readAttribute($model, 'date_created'));
+            $instance->setDateCreated(static::createDateTime(static::readAttribute($model, 'date_created')));
             
-            if ($dateCreated instanceof DateTime) {
-                $instance->setDateCreated($dateCreated);
-            }
-            
-            $dateUpdated = DateTime::createFromFormat(DateTime::W3C, (string) static::readAttribute($model, 'date_modified'));
-            
-            if ($dateUpdated instanceof DateTime) {
-                $instance->setDateModified($dateUpdated);
-            }
+            $instance->setDateModified(static::createDateTime(static::readAttribute($model, 'date_modified')));
         }
         
         return $instance;

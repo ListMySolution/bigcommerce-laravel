@@ -1848,23 +1848,11 @@ class Order extends BaseModel
             $instance->setId((int) static::readAttribute($model, 'id', 0));
             $instance->setCustomerId((int) static::readAttribute($model, 'customer_id', 0));
             
-            $date_created = DateTime::createFromFormat(DateTime::RSS, static::readAttribute($model, 'date_created'));
+            $instance->setDateCreated(static::createDateTime(static::readAttribute($model, 'date_created')));
             
-            if ($date_created instanceof DateTime) {
-                $instance->setDateCreated($date_created);
-            }
+            $instance->setDateModified(static::createDateTime(static::readAttribute($model, 'date_modified')));
             
-            $date_modified = DateTime::createFromFormat(DateTime::RSS, static::readAttribute($model, 'date_modified'));
-            
-            if ($date_modified instanceof DateTime) {
-                $instance->setDateModified($date_modified);
-            }
-            
-            $date_shipped = DateTime::createFromFormat(DateTime::RSS, static::readAttribute($model, 'date_shipped'));
-            
-            if ($date_shipped instanceof DateTime) {
-                $instance->setDateShipped($date_shipped);
-            }
+            $instance->setDateShipped(static::createDateTime(static::readAttribute($model, 'date_shipped')));
             
             $instance->setStatusId((int) static::readAttribute($model, 'status_id'));
             $instance->setStatus(static::readAttribute($model, 'status'));
