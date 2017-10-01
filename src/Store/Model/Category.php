@@ -467,6 +467,20 @@ class Category extends BaseModel
     }
 
     /**
+     *
+     * {@inheritdoc}
+     * @see \Maverickslab\Integration\BigCommerce\Store\Model\BaseModel::propertyUnsetter()
+     */
+    protected function propertyUnsetter(array &$arrayData)
+    {
+        parent::propertyUnsetter($arrayData);
+        
+        if (empty($arrayData['parent_id'])) {
+            $arrayData['parent_id'] = 0;
+        }
+    }
+
+    /**
      * Creates an instance of this class from a BigCommerce entity/model
      *
      * @param mixed $model
