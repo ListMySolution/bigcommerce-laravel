@@ -9,6 +9,8 @@ use Maverickslab\Integration\BigCommerce\Store\Model\ {
     OrderedProduct
 };
 use DateTime;
+use Maverickslab\Integration\BigCommerce\Store\Model\ShippingAddress;
+use Maverickslab\Integration\BigCommerce\Store\Model\OrderCoupon;
 
 /**
  * Order repository
@@ -68,6 +70,8 @@ class OrderRepository extends BaseRepository
         $itemsReturnedForCurrentRequest = 0;
         $customerPromises = [];
         $productPromises = [];
+        $shippingAddressPromises = [];
+        $couponPromises = [];
         
         do {
             $response = $this->bigCommerce->order()
@@ -88,6 +92,10 @@ class OrderRepository extends BaseRepository
                     $customerPromises[$order->getId()] = $this->bigCommerce->customer()->fetchById($order->getCustomerId());
                     
                     $productPromises[$order->getId()] = $this->bigCommerce->order()->fetchOrderedProducts($order->getId(), 1, $limit);
+                    
+                    $shippingAddressPromises[$order->getId()] = $this->bigCommerce->order()->fetchShippingAddresses($order->getId(), 1, $limit);
+                    
+                    $couponPromises[$order->getId()] = $this->bigCommerce->order()->fetchCoupons($order->getId(), 1, $limit);
                 }
             } else {
                 // A 204 - No content- may have been returned.
@@ -96,24 +104,23 @@ class OrderRepository extends BaseRepository
             }
         } while ($limit == $itemsReturnedForCurrentRequest);
         
-        // FETCH CUSTOMERS FULL DETAILS
-        $finalCustomerResponses = $this->bigCommerce->customer()->resolvePromises($customerPromises);
-        
-        $finalProductsPromises = $this->bigCommerce->order()->resolvePromises($productPromises);
+        $finalPromises = array(
+            'customer' => $this->bigCommerce->customer()->resolvePromises($customerPromises),
+            'products' => $this->bigCommerce->order()->resolvePromises($productPromises),
+            'shippintAdresses' => $this->bigCommerce->order()->resolvePromises($shippingAddressPromises),
+            'coupons' => $this->bigCommerce->order()->resolvePromises($couponPromises)
+        );
         
         $finalResponses = $this->bigCommerce->order()
-            ->resolvePromises([
-            $finalCustomerResponses,
-            $finalProductsPromises
-        ])
+            ->resolvePromises($finalPromises)
             ->wait();
         
-        foreach ($finalResponses[0] as $orderId => $customerResponse) {
+        foreach ($finalResponses['customer'] as $orderId => $customerResponse) {
             $customerResponseData = $this->decodeResponse($customerResponse);
             $orders[$orderId]->setCustomer(Customer::fromBigCommerce($customerResponseData->data));
         }
         
-        foreach ($finalResponses[1] as $orderId => $productResponse) {
+        foreach ($finalResponses['products'] as $orderId => $productResponse) {
             $productResponseData = $this->decodeResponse($productResponse);
             
             if (is_array($productResponseData->data)) {
@@ -122,6 +129,30 @@ class OrderRepository extends BaseRepository
                 }, $productResponseData->data);
                 
                 $orders[$orderId]->addProducts(...$products);
+            }
+        }
+        
+        foreach ($finalResponses['shippintAdresses'] as $orderId => $shippingAddressResponse) {
+            $shippingAddressResponseData = $this->decodeResponse($shippingAddressResponse);
+            
+            if (is_array($shippingAddressResponseData->data)) {
+                $shippingAddresses = array_map(function ($shippingAddressModel) {
+                    return ShippingAddress::fromBigCommerce($shippingAddressModel);
+                }, $shippingAddressResponseData->data);
+                
+                $orders[$orderId]->addShippingAddresses(...$shippingAddresses);
+            }
+        }
+        
+        foreach ($finalResponses['coupons'] as $orderId => $couponResponse) {
+            $couponResponseData = $this->decodeResponse($couponResponse);
+            
+            if (is_array($couponResponseData->data)) {
+                $coupons = array_map(function ($couponModel) {
+                    return OrderCoupon::fromBigCommerce($couponModel);
+                }, $couponResponseData->data);
+                
+                $orders[$orderId]->addCoupons(...$coupons);
             }
         }
         

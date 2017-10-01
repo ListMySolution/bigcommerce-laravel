@@ -299,9 +299,7 @@ class OrderedProduct extends BaseModel
      */
     public function setId(?int $id): self
     {
-        if ($id) {
-            $this->id = $id;
-        }
+        $this->id = $id;
         
         return $this;
     }
@@ -322,9 +320,7 @@ class OrderedProduct extends BaseModel
      */
     public function setOrderId(?int $id): self
     {
-        if ($id) {
-            $this->order_id = $id;
-        }
+        $this->order_id = $id;
         
         return $this;
     }
@@ -345,9 +341,7 @@ class OrderedProduct extends BaseModel
      */
     public function setOrderAddressId(?int $id): self
     {
-        if ($id) {
-            $this->order_address_id = $id;
-        }
+        $this->order_address_id = $id;
         
         return $this;
     }
@@ -368,9 +362,7 @@ class OrderedProduct extends BaseModel
      */
     public function setProductId(?int $id): self
     {
-        if ($id) {
-            $this->product_id = $id;
-        }
+        $this->product_id = $id;
         
         return $this;
     }
@@ -412,9 +404,7 @@ class OrderedProduct extends BaseModel
      */
     public function setSKU(?string $sku): self
     {
-        if ($sku) {
-            $this->sku = $sku;
-        }
+        $this->sku = $sku;
         
         return $this;
     }
@@ -435,9 +425,7 @@ class OrderedProduct extends BaseModel
      */
     public function setType(?string $type): self
     {
-        if ($type) {
-            $this->type = $type;
-        }
+        $this->type = $type;
         
         return $this;
     }
@@ -458,9 +446,7 @@ class OrderedProduct extends BaseModel
      */
     public function setBasePrice(?float $price): self
     {
-        if ($price) {
-            $this->base_price = $price;
-        }
+        $this->base_price = $price;
         
         return $this;
     }
@@ -481,9 +467,7 @@ class OrderedProduct extends BaseModel
      */
     public function setPriceExcludingTax(?float $price): self
     {
-        if ($price) {
-            $this->price_ex_tax = $price;
-        }
+        $this->price_ex_tax = $price;
         
         return $this;
     }
@@ -504,9 +488,7 @@ class OrderedProduct extends BaseModel
      */
     public function setPriceIncludingTax(?float $price): self
     {
-        if ($price) {
-            $this->price_inc_tax = $price;
-        }
+        $this->price_inc_tax = $price;
         
         return $this;
     }
@@ -527,9 +509,7 @@ class OrderedProduct extends BaseModel
      */
     public function setPriceTax(?float $tax): self
     {
-        if ($tax) {
-            $this->price_tax = $tax;
-        }
+        $this->price_tax = $tax;
         
         return $this;
     }
@@ -550,9 +530,7 @@ class OrderedProduct extends BaseModel
      */
     public function setBaseTotal(?float $total): self
     {
-        if ($total) {
-            $this->base_total = $total;
-        }
+        $this->base_total = $total;
         
         return $this;
     }
@@ -573,9 +551,7 @@ class OrderedProduct extends BaseModel
      */
     public function setTotalExcludingTax(?float $total): self
     {
-        if ($total) {
-            $this->total_ex_tax = $total;
-        }
+        $this->total_ex_tax = $total;
         
         return $this;
     }
@@ -596,9 +572,7 @@ class OrderedProduct extends BaseModel
      */
     public function setTotalIncludingTax(?float $total): self
     {
-        if ($total) {
-            $this->total_inc_tax = $total;
-        }
+        $this->total_inc_tax = $total;
         
         return $this;
     }
@@ -619,9 +593,7 @@ class OrderedProduct extends BaseModel
      */
     public function setTotalTax(?float $tax): self
     {
-        if ($tax) {
-            $this->total_tax = $tax;
-        }
+        $this->total_tax = $tax;
         
         return $this;
     }
@@ -642,9 +614,7 @@ class OrderedProduct extends BaseModel
      */
     public function setWeight(?float $weight): self
     {
-        if ($weight) {
-            $this->weight = $weight;
-        }
+        $this->weight = $weight;
         
         return $this;
     }
@@ -665,9 +635,7 @@ class OrderedProduct extends BaseModel
      */
     public function setQuantity(?int $quantity): self
     {
-        if ($quantity) {
-            $this->quantity = $quantity;
-        }
+        $this->quantity = $quantity;
         
         return $this;
     }
@@ -688,9 +656,7 @@ class OrderedProduct extends BaseModel
      */
     public function setBaseCostPrice(?float $price): self
     {
-        if ($price) {
-            $this->base_cost_price = $price;
-        }
+        $this->base_cost_price = $price;
         
         return $this;
     }
@@ -711,9 +677,7 @@ class OrderedProduct extends BaseModel
      */
     public function setCostPriceExcludingTax(?float $price): self
     {
-        if ($price) {
-            $this->cost_price_ex_tax = $price;
-        }
+        $this->cost_price_ex_tax = $price;
         
         return $this;
     }
@@ -734,9 +698,7 @@ class OrderedProduct extends BaseModel
      */
     public function setCostPriceIncludingTax(?float $price): self
     {
-        if ($price) {
-            $this->cost_price_inc_tax = $price;
-        }
+        $this->cost_price_inc_tax = $price;
         
         return $this;
     }
@@ -757,9 +719,7 @@ class OrderedProduct extends BaseModel
      */
     public function setCostPriceTax(?float $tax): self
     {
-        if ($tax) {
-            $this->cost_price_tax = $tax;
-        }
+        $this->cost_price_tax = $tax;
         
         return $this;
     }
@@ -801,9 +761,7 @@ class OrderedProduct extends BaseModel
      */
     public function setQuantityRefunded(?int $quantity): self
     {
-        if ($quantity) {
-            $this->quantity_refunded = $quantity;
-        }
+        $this->quantity_refunded = $quantity;
         
         return $this;
     }
@@ -824,9 +782,7 @@ class OrderedProduct extends BaseModel
      */
     public function setAmountRefunded(?float $amount): self
     {
-        if ($amount) {
-            $this->refund_amount = $amount;
-        }
+        $this->refund_amount = $amount;
         
         return $this;
     }
@@ -847,9 +803,7 @@ class OrderedProduct extends BaseModel
      */
     public function setReturnId(?int $id): self
     {
-        if ($id) {
-            $this->return_id = $id;
-        }
+        $this->return_id = $id;
         
         return $this;
     }
@@ -870,9 +824,7 @@ class OrderedProduct extends BaseModel
      */
     public function setWrappingName(?string $name): self
     {
-        if ($name) {
-            $this->wrapping_name = $name;
-        }
+        $this->wrapping_name = $name;
         
         return $this;
     }
@@ -893,9 +845,7 @@ class OrderedProduct extends BaseModel
      */
     public function setBaseWrappingCost(?float $cost): self
     {
-        if ($cost) {
-            $this->base_wrapping_cost = $cost;
-        }
+        $this->base_wrapping_cost = $cost;
         
         return $this;
     }
@@ -916,9 +866,7 @@ class OrderedProduct extends BaseModel
      */
     public function setWrappingCostExcludingTax(?float $price): self
     {
-        if ($price) {
-            $this->wrapping_cost_ex_tax = $price;
-        }
+        $this->wrapping_cost_ex_tax = $price;
         
         return $this;
     }
@@ -939,9 +887,7 @@ class OrderedProduct extends BaseModel
      */
     public function setWrappingCostIncludingTax(?float $price): self
     {
-        if ($price) {
-            $this->wrapping_cost_inc_tax = $price;
-        }
+        $this->wrapping_cost_inc_tax = $price;
         
         return $this;
     }
@@ -962,9 +908,7 @@ class OrderedProduct extends BaseModel
      */
     public function setWrappingCostTax(?float $price): self
     {
-        if ($price) {
-            $this->wrapping_cost_tax = $price;
-        }
+        $this->wrapping_cost_tax = $price;
         
         return $this;
     }
@@ -985,9 +929,7 @@ class OrderedProduct extends BaseModel
      */
     public function setWrappingMessage(?string $message): self
     {
-        if ($message) {
-            $this->wrapping_message = $message;
-        }
+        $this->wrapping_message = $message;
         
         return $this;
     }
@@ -1008,9 +950,7 @@ class OrderedProduct extends BaseModel
      */
     public function setQuantityShipped(?int $quantity): self
     {
-        if ($quantity) {
-            $this->quantity_shipped = $quantity;
-        }
+        $this->quantity_shipped = $quantity;
         
         return $this;
     }
@@ -1073,9 +1013,7 @@ class OrderedProduct extends BaseModel
      */
     public function setFixedShippingCost(?float $price): self
     {
-        if ($price) {
-            $this->fixed_shipping_cost = $price;
-        }
+        $this->fixed_shipping_cost = $price;
         
         return $this;
     }
@@ -1096,9 +1034,7 @@ class OrderedProduct extends BaseModel
      */
     public function setEbayItemId(?string $id): self
     {
-        if ($id) {
-            $this->ebay_item_id = $id;
-        }
+        $this->ebay_item_id = $id;
         
         return $this;
     }
@@ -1119,9 +1055,7 @@ class OrderedProduct extends BaseModel
      */
     public function setEbayTransactionId(?string $id): self
     {
-        if ($id) {
-            $this->ebay_transaction_id = $id;
-        }
+        $this->ebay_transaction_id = $id;
         
         return $this;
     }
@@ -1142,9 +1076,7 @@ class OrderedProduct extends BaseModel
      */
     public function setOptionSetId(?int $id): self
     {
-        if ($id) {
-            $this->option_set_id = $id;
-        }
+        $this->option_set_id = $id;
         
         return $this;
     }
@@ -1165,9 +1097,7 @@ class OrderedProduct extends BaseModel
      */
     public function setParentOrderProductId(?int $id): self
     {
-        if ($id) {
-            $this->parent_order_product_id = $id;
-        }
+        $this->parent_order_product_id = $id;
         
         return $this;
     }
@@ -1209,9 +1139,7 @@ class OrderedProduct extends BaseModel
      */
     public function setBindKeepingNumber(?string $binNumber): self
     {
-        if ($binNumber) {
-            $this->bin_picking_number = $binNumber;
-        }
+        $this->bin_picking_number = $binNumber;
         
         return $this;
     }
@@ -1232,9 +1160,7 @@ class OrderedProduct extends BaseModel
      */
     public function setExternalId(?int $id): self
     {
-        if ($id) {
-            $this->external_id = $id;
-        }
+        $this->external_id = $id;
         
         return $this;
     }

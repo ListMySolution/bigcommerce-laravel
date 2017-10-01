@@ -71,7 +71,7 @@ abstract class BaseModel implements \JsonSerializable
                     unset($arrayData[$key]);
                 }
             } else {
-                if (is_null($subData) || (is_string($subData) && empty($subData))) {
+                if (! $subData && ! is_bool($subData)) {
                     unset($arrayData[$key]);
                 }
             }
@@ -136,7 +136,7 @@ abstract class BaseModel implements \JsonSerializable
 
     /**
      * Creates a new datetime instance from a given string
-     * 
+     *
      * @param string $datetime
      * @return DateTime|NULL
      */
