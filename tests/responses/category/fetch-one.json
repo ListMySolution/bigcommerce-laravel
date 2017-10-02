@@ -1,0 +1,27 @@
+{
+	"data": {
+		"id": 1,
+		"parent_id": 0,
+		"name": "Mens",
+		"description": "",
+		"views": 0,
+		"sort_order": 2,
+		"page_title": "",
+		"meta_keywords": [
+			""
+		],
+		"meta_description": "",
+		"layout_file": "category.html",
+		"image_url": "",
+		"is_visible": true,
+		"search_keywords": "",
+		"default_product_sort": "use_store_settings",
+		"custom_url": {
+			"url": "/mens/",
+			"is_customized": false
+		}
+	},
+	"meta": {
+		
+	}
+}

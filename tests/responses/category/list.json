@@ -1,0 +1,368 @@
+{
+	"data": [
+		{
+			"id": 1,
+			"parent_id": 0,
+			"name": "Mens",
+			"description": "",
+			"views": 0,
+			"sort_order": 2,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": "",
+			"layout_file": "category.html",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/mens/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 2,
+			"parent_id": 3,
+			"name": "Shoes",
+			"description": "",
+			"views": 0,
+			"sort_order": 3,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": "",
+			"layout_file": "category.html",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/shoes/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 3,
+			"parent_id": 0,
+			"name": "Ladies",
+			"description": "",
+			"views": 0,
+			"sort_order": 1,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": "",
+			"layout_file": "category.html",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/ladies/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 8,
+			"parent_id": 3,
+			"name": "Dresses",
+			"description": "",
+			"views": 0,
+			"sort_order": 2,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": "",
+			"layout_file": "category.html",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/accessories-2/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 14,
+			"parent_id": 0,
+			"name": "Accessories",
+			"description": "",
+			"views": 0,
+			"sort_order": 3,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": "",
+			"layout_file": "category.html",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/accessories-3/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 15,
+			"parent_id": 0,
+			"name": "Sale",
+			"description": "",
+			"views": 0,
+			"sort_order": 4,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": "",
+			"layout_file": "category.html",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/sale/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 16,
+			"parent_id": 1,
+			"name": "Bags",
+			"description": "",
+			"views": 0,
+			"sort_order": 1,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": "",
+			"layout_file": "category.html",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/new-category/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 17,
+			"parent_id": 3,
+			"name": "Bags",
+			"description": "",
+			"views": 0,
+			"sort_order": 1,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": "",
+			"layout_file": "category.html",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/ladies-1/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 18,
+			"parent_id": 0,
+			"name": "Dresses",
+			"description": "",
+			"views": 0,
+			"sort_order": 0,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": null,
+			"layout_file": "",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/dresses/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 19,
+			"parent_id": 0,
+			"name": "Shoes",
+			"description": "",
+			"views": 0,
+			"sort_order": 0,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": null,
+			"layout_file": "",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/shoes-1/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 20,
+			"parent_id": 0,
+			"name": "Bags",
+			"description": "",
+			"views": 0,
+			"sort_order": 0,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": null,
+			"layout_file": "",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/bags/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 21,
+			"parent_id": 0,
+			"name": "Collars",
+			"description": "",
+			"views": 0,
+			"sort_order": 0,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": null,
+			"layout_file": "",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/collars/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 22,
+			"parent_id": 0,
+			"name": "Contemporary",
+			"description": "",
+			"views": 0,
+			"sort_order": 0,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": null,
+			"layout_file": "",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/contemporary/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 23,
+			"parent_id": 0,
+			"name": "Craft Kits",
+			"description": "",
+			"views": 0,
+			"sort_order": 0,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": null,
+			"layout_file": "",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/craft-kits/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 24,
+			"parent_id": 0,
+			"name": "Portholes",
+			"description": "",
+			"views": 0,
+			"sort_order": 0,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": null,
+			"layout_file": "",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/portholes/",
+				"is_customized": false
+			}
+		},
+		{
+			"id": 25,
+			"parent_id": 0,
+			"name": "Replacement Parts & Tools",
+			"description": "",
+			"views": 0,
+			"sort_order": 0,
+			"page_title": "",
+			"meta_keywords": [
+				""
+			],
+			"meta_description": null,
+			"layout_file": "",
+			"image_url": "",
+			"is_visible": true,
+			"search_keywords": "",
+			"default_product_sort": "use_store_settings",
+			"custom_url": {
+				"url": "/replacement-parts-tools/",
+				"is_customized": false
+			}
+		}
+	],
+	"meta": {
+		"pagination": {
+			"total": 16,
+			"count": 16,
+			"per_page": 50,
+			"current_page": 1,
+			"total_pages": 1,
+			"links": {
+				"current": "?page=1&limit=50"
+			}
+		}
+	}
+}

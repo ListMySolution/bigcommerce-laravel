@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "company": "Mavericks",
+  "first_name": "Albert",
+  "last_name": "Fiati-Kumasenu",
+  "email": "albert@syncommerceapp.com",
+  "phone": "0249407233",
+  "form_fields": null,
+  "date_created": "Fri, 22 Aug 2014 06:25:36 +0000",
+  "date_modified": "Fri, 22 Aug 2014 06:25:36 +0000",
+  "store_credit": "0.0000",
+  "registration_ip_address": "41.207.252.122",
+  "customer_group_id": 0,
+  "notes": "",
+  "tax_exempt_category": "",
+  "reset_pass_on_login": false,
+  "accepts_marketing": true,
+  "addresses": {
+    "url": "https://api.bigcommerce.com/stores/9ma06/v2/customers/1/addresses",
+    "resource": "/customers/1/addresses"
+  }
+}
