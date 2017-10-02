@@ -2,8 +2,10 @@
 declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 
-use Maverickslab\Integration\BigCommerce\Store\Model\Product;
 use Maverickslab\Integration\BigCommerce\Store\Model\Category;
+use Maverickslab\Integration\BigCommerce\Store\Model\Product;
+use Maverickslab\Integration\BigCommerce\Store\Model\Image;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Product repository class
@@ -76,7 +78,7 @@ class ProductRepository extends BaseRepository
     }
 
     /**
-     * Exports products to BigCommerce
+     * Exports new products to BigCommerce
      *
      * @param Product ...$products
      * @return Product[]
@@ -95,10 +97,55 @@ class ProductRepository extends BaseRepository
         
         foreach ($responses as $response) {
             $responseData = $this->decodeResponse($response);
-            $exportedProducts[] = Product::fromBigCommerce($responseData->data);
+            $product = Product::fromBigCommerce($responseData->data);
+            $exportedProducts[$product->getId()] = $product;
         }
         
-        return $exportedProducts;
+        // Upload product images
+        $imageUploadPromises = [];
+        
+        foreach ($exportedProducts as $exportedProduct) {
+            if (count($exportedProduct->getImages())) {
+                
+                // Filter out images with no valid file for upload
+                $images = array_filter($exportedProduct->getImages(), function (Image $image) {
+                    if ($image->getFile() && file_exists($image->getFile())) {
+                        return $image;
+                    }
+                    
+                    if ($image->getStandardUrl() && false !== filter_var($image->getStandardUrl(), FILTER_VALIDATE_URL)) {
+                        return $image;
+                    }
+                    
+                    return false;
+                });
+                
+                if (count($images)) {
+                    $currentImagePromises = array_map(function (Image $image) use ($exportedProduct) {
+                        // Prefer image Url over local/physical file
+                        $file = $image->getStandardUrl() ? $image->getStandardUrl() : $image->getFile();
+                        return $this->bigCommerce->product()->uploadProductImage($exportedProduct->getId(), $file);
+                    }, $images);
+                    
+                    $imageUploadPromises[$exportedProduct->getId()] = $this->bigCommerce->product()->resolvePromises($currentImagePromises);
+                }
+            }
+        }
+        
+        $imageUploadResponses = $this->bigCommerce->product()
+            ->resolvePromises($imageUploadPromises)
+            ->wait();
+        
+        foreach ($imageUploadResponses as $productId => $subImageUploadResponseArray) {
+            $productImages = array_map(function (Response $response) {
+                $responseData = $this->decodeResponse($response);
+                return Image::fromBigCommerce($responseData->data);
+            }, $subImageUploadResponseArray);
+            
+            $exportedProducts[$productId]->addImages(...$productImages);
+        }
+        
+        return array_values($exportedProducts);
     }
 
     /**
@@ -121,10 +168,63 @@ class ProductRepository extends BaseRepository
         
         foreach ($responses as $response) {
             $responseData = $this->decodeResponse($response);
-            $updatedProducts[] = Product::fromBigCommerce($responseData->data);
+            $updatedProduct = Product::fromBigCommerce($responseData->data);
+            $updatedProducts[$updatedProduct->getId()] = $updatedProduct;
         }
         
-        return $updatedProducts;
+        // Upload product images
+        $imageUploadPromises = [];
+        
+        foreach ($updatedProducts as $updatedProduct) {
+            if (count($updatedProduct->getImages())) {
+                
+                // Filter out images with no valid file for upload
+                // Also filter out non-new images
+                $images = array_filter($updatedProduct->getImages(), function (Image $image) {
+                    
+                    // Skip existing images. Existing images have ids
+                    if ($image->getId()) {
+                        return false;
+                    }
+                    
+                    if ($image->getFile() && file_exists($image->getFile())) {
+                        return $image;
+                    }
+                    
+                    if ($image->getStandardUrl() && false !== filter_var($image->getStandardUrl(), FILTER_VALIDATE_URL)) {
+                        return $image;
+                    }
+                    
+                    return false;
+                });
+                
+                if (count($images)) {
+                    $currentImagePromises = array_map(function (Image $image) use ($updatedProduct) {
+                        // Prefer image Url over local/physical file
+                        $file = $image->getStandardUrl() ? $image->getStandardUrl() : $image->getFile();
+                        
+                        return $this->bigCommerce->product()->uploadProductImage($updatedProduct->getId(), $file);
+                    }, $images);
+                    
+                    $imageUploadPromises[$updatedProduct->getId()] = $this->bigCommerce->product()->resolvePromises($currentImagePromises);
+                }
+            }
+        }
+        
+        $imageUploadResponses = $this->bigCommerce->product()
+            ->resolvePromises($imageUploadPromises)
+            ->wait();
+        
+        foreach ($imageUploadResponses as $productId => $subImageUploadResponseArray) {
+            $productImages = array_map(function (Response $response) {
+                $responseData = $this->decodeResponse($response);
+                return Image::fromBigCommerce($responseData->data);
+            }, $subImageUploadResponseArray);
+            
+            $exportedProducts[$productId]->addImages(...$productImages);
+        }
+        
+        return array_values($updatedProducts);
     }
 
     /**

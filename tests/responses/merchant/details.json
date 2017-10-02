@@ -1,3 +1,50 @@
 {
-	
+	"id": "9ma06",
+	"domain": "mavericks-test-store-main.mybigcommerce.com",
+	"secure_url": "https://store-9ma06.mybigcommerce.com",
+	"status": "live",
+	"name": "mavericks-store1",
+	"first_name": "mavericks",
+	"last_name": "N/A",
+	"address": "",
+	"country": "Ghana",
+	"country_code": "GH",
+	"phone": "",
+	"admin_email": "info@maverickstechnologies.com",
+	"order_email": "info@maverickstechnologies.com",
+	"favicon_url": "https://cdn3.bigcommerce.com/s-9ma06/product_images/default_favicon.ico",
+	"timezone": {
+		"name": "Europe/London",
+		"raw_offset": 0,
+		"dst_offset": 0,
+		"dst_correction": false,
+		"date_format": {
+			"display": "jS M Y",
+			"export": "jS M Y",
+			"extended_display": "jS M Y @ g:i A"
+		}
+	},
+	"language": "en",
+	"currency": "GHS",
+	"currency_symbol": "GHS",
+	"decimal_separator": ".",
+	"thousands_separator": ",",
+	"decimal_places": 2,
+	"currency_symbol_location": "left",
+	"weight_units": "LBS",
+	"dimension_units": "Inches",
+	"dimension_decimal_places": "2",
+	"dimension_decimal_token": ".",
+	"dimension_thousands_token": ",",
+	"plan_name": "Professional Application Developer Store",
+	"plan_level": "Applicaton Developer",
+	"industry": "",
+	"logo": [],
+	"is_price_entered_with_tax": false,
+	"active_comparison_modules": [],
+	"features": {
+		"stencil_enabled": false,
+		"sitewidehttps_enabled": false,
+		"facebook_catalog_id": ""
+	}
 }
