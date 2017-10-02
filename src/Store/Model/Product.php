@@ -129,6 +129,12 @@ class Product extends BaseModel
 
     /**
      *
+     * @var int[]
+     */
+    protected $category_ids = [];
+
+    /**
+     *
      * @var Image[]
      */
     protected $images = [];
@@ -719,7 +725,7 @@ class Product extends BaseModel
      */
     public function getCategoryIds(): array
     {
-        return $this->categories;
+        return $this->category_ids;
     }
 
     /**
@@ -729,11 +735,11 @@ class Product extends BaseModel
      *            int[]
      * @return self
      */
-    public function setCategoryIds(array $categories): self
+    public function setCategoryIds(int ...$categories): self
     {
-        $this->categories = [];
+        $this->category_ids = [];
         
-        $this->addCategory(...$categories);
+        $this->addCategoryIds(...$categories);
         
         return $this;
     }
@@ -747,7 +753,7 @@ class Product extends BaseModel
     public function addCategoryIds(int ...$categories): self
     {
         foreach ($categories as $category) {
-            $this->categories[] = $category;
+            $this->category_ids[] = $category;
         }
         
         return $this;
@@ -1723,6 +1729,32 @@ class Product extends BaseModel
         }
         
         return $this;
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see \Maverickslab\Integration\BigCommerce\Store\Model\BaseModel::toBigCommerceEntity()
+     */
+    public function toBigCommerceEntity(): array
+    {
+        $copy = clone $this;
+        
+        if (count($copy->categories)) {
+            $copy->categories = array_map(function (Category $category) {
+                return $category->getId();
+            }, $copy->categories);
+        } else {
+            $copy->categories = $copy->category_ids;
+        }
+        
+        unset($copy->category_ids);
+        
+        $copyArray = $copy->toArray();
+        
+        $copy->propertyUnsetter($copyArray);
+        
+        return $copyArray;
     }
 
     /**

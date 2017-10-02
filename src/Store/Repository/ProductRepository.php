@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 
 use Maverickslab\Integration\BigCommerce\Store\Model\Product;
+use Maverickslab\Integration\BigCommerce\Store\Model\Category;
 
 /**
  * Product repository class
@@ -31,6 +32,8 @@ class ProductRepository extends BaseRepository
             'bulk_pricing_rules'
         );
         
+        $categoryPromises = [];
+        
         do {
             
             $response = $this->bigCommerce->product()
@@ -43,12 +46,33 @@ class ProductRepository extends BaseRepository
             
             if (is_array($responseData->data)) {
                 foreach ($responseData->data as $productModel) {
-                    $products[] = Product::fromBigCommerce($productModel);
+                    $product = Product::fromBigCommerce($productModel);
+                    
+                    $products[$product->getId()] = $product;
+                    
+                    if (count($product->getCategoryIds())) {
+                        $productCategoryPromises = array_map(function ($categoryId) {
+                            return $this->bigCommerce->category()->fetchById($categoryId);
+                        }, $product->getCategoryIds());
+                        
+                        $categoryPromises[$product->getId()] = $this->bigCommerce->category()->resolvePromises($productCategoryPromises);
+                    }
                 }
             }
         } while ($page <= $totalPages);
         
-        return $products;
+        $categoryResponses = $this->bigCommerce->category()
+            ->resolvePromises($categoryPromises)
+            ->wait();
+        
+        foreach ($categoryResponses as $productId => $categoryResponseArray) {
+            foreach ($categoryResponseArray as $categoryResponse) {
+                $categoryResponseData = $this->decodeResponse($categoryResponse);
+                $products[$productId]->addCategory(Category::fromBigCommerce($categoryResponseData->data));
+            }
+        }
+        
+        return array_values($products);
     }
 
     /**
