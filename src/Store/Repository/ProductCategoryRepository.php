@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Maverickslab\Integration\BigCommerce\Store\Repository;
 
 use Maverickslab\Integration\BigCommerce\Store\Model\Category;
+use GuzzleHttp\Psr7\Response;
 
 class ProductCategoryRepository extends BaseRepository
 {
@@ -65,6 +66,29 @@ class ProductCategoryRepository extends BaseRepository
     }
 
     /**
+     * Updates a collection of categories on BigCommerce
+     *
+     * @param Category ...$categories
+     * @return Category[]
+     */
+    public function exportUpdate(Category ...$categories): array
+    {
+        $promises = array_map(function (Category $category) {
+            return $this->bigCommerce->category()->update($category->getId(), $category->toBigCommerceEntity());
+        }, $categories);
+        
+        $responses = $this->bigCommerce->category()
+            ->resolvePromises($promises)
+            ->wait();
+        
+        return array_map(function (Response $response) {
+            $responseData = $this->decodeResponse($response);
+            
+            return Category::fromBigCommerce($responseData->data);
+        }, $responses);
+    }
+
+    /**
      * Saves a collection categories locally
      *
      * @param Category ...$categories
@@ -77,7 +101,7 @@ class ProductCategoryRepository extends BaseRepository
 
     /**
      * Updates a collection of categories locally
-     * 
+     *
      * @param Category ...$categories
      * @return Category[]
      */
