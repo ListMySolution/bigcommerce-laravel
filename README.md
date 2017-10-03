@@ -60,12 +60,14 @@ $storeId = '';
 
 $integrator = new BigCommerceIntegrator($authToken, $clientId, $clientSecret, $storeId);
 ```
+
 #### Fetch store/merchant information
 ```
 <?php 
 $merchant = $integrator->merchant()->details();
- ```
- `$merchant` is an instance of `Maverickslab\Integration\BigCommerce\Store\Model\Merchant`. You can now access merchant details as follows.
+```
+`$merchant` is an instance of `Maverickslab\Integration\BigCommerce\Store\Model\Merchant`. You can now access merchant details as follows.
+
 ```
     // Get store Id
     echo $merchant->getId(), PHP_EOL;
@@ -103,9 +105,9 @@ $merchant = $integrator->merchant()->details();
 
 ```
 $categories = $integrator->category()->import();
- ```
+```
  `$categories` is an array of Categories, `Maverickslab\Integration\BigCommerce\Store\Model\Category[]`. You can access details of individual categories as follows.
- ```
+```
  foreach ($categories as $category) {
      //Get id
     echo $category->getId(), PHP_EOL;
@@ -155,7 +157,7 @@ $newCategories = $integrator->category()->export($category1, $category2, $catego
 
 #### Updating existing categories
 **NOTE: Only categories with non-zero IDs will be sent to BigCommerce for update**
-```php
+```
 $categoryToUpdate = new Category();
 $categoryToUpdate->setId(2); //REQUIRED
 $categoryToUpdate->setName('Aeroplanes');
@@ -182,7 +184,7 @@ $deleteCounts = $integrator->category()->deleteByIds(...$ids);
 
  **NOTE: Only categories with non-zero IDs will be sent to BigCommerce for deletion**
 
-```php
+```
  $categories = [new Category(), new Category(), new Category()];
 
  $deleteCounts = $integrator->category()->delete(...$categories);
