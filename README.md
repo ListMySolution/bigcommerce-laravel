@@ -168,6 +168,7 @@ $updatedCategories = $integrator->category()->exportUpdate($categoryToUpdate);
 
 #### Deleting categories
 ##### Deleting by Id
+
 ```
 //Single deletion
 $deleteCounts = $integrator->category()->deleteByIds(1);
