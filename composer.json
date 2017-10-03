@@ -22,7 +22,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url":  "https://bitbucket.org/maverickslab/bigcommerce"
+            "url":  "https://github.com/mavericks-lab/bigcommerce"
         }
     ],
     "require-dev": {
