@@ -29,9 +29,9 @@ abstract class BaseRepository
      */
     protected $repositoryWriter;
 
-    public function __construct(BigCommerce $bigCommerce, ?RepositoryWriterInterface $repositoryWriter)
+    public function __construct(BigCommerce $bigCommerce, RepositoryWriterInterface $repositoryWriter = null)
     {
-        $this->bigCommerce = $bigCommerce; 
+        $this->bigCommerce = $bigCommerce;
         
         $this->repositoryWriter = null === $repositoryWriter ? new RepositoryWriter() : $repositoryWriter;
     }

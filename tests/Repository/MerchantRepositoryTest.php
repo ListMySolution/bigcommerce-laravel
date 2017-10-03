@@ -39,7 +39,7 @@ class MerchantRepositoryTest extends BaseRepositoryTest
         parent::tearDown();
     }
 
-    public function testImport()
+    public function testDetails()
     {
         $merchant = null;
         
@@ -47,7 +47,7 @@ class MerchantRepositoryTest extends BaseRepositoryTest
         
         $this->mockHandler->append(new Response(200, $this->responseHeaders, $this->readResponseFile('merchant/details.json')));
         
-        $merchant = $this->repository->import();
+        $merchant = $this->repository->details();
         
         $this->assertNotNull($merchant);
         

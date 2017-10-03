@@ -18,7 +18,7 @@ class MerchantRepository extends BaseRepository
      *
      * @return Merchant|NULL
      */
-    public function import(): ?Merchant
+    public function details(): ?Merchant
     {
         $response = $this->bigCommerce->merchant()
             ->fetchDetails()
