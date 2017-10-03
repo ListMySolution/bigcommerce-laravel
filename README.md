@@ -188,8 +188,9 @@ $deleteCounts = $integrator->category()->deleteByIds(...$ids);
  $categories = [new Category(), new Category(), new Category()];
 
  $deleteCounts = $integrator->category()->delete(...$categories);
-  ```
+```
 #### Importing products
+
 ```
 $allProducts = $integrator->product()->import();
 ```
