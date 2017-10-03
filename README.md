@@ -59,7 +59,7 @@ $clientSecret = '';
 $storeId = '';
 
 $integrator = new BigCommerceIntegrator($authToken, $clientId, $clientSecret, $storeId);
- ```
+```
 #### Fetch store/merchant information
 ```
 <?php 
@@ -96,7 +96,7 @@ $merchant = $integrator->merchant()->details();
     
     // Get currency
     echo $merchant->getCurrency(), PHP_EOL;
- ```
+```
  Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Merchant` for other details.
 
  #### Importing all product categories
@@ -119,7 +119,7 @@ $categories = $integrator->category()->import();
     echo $category->getViews(), PHP_EOL;
 }
 
-  ```
+```
 Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Category` on how to access other properties of a category.
 
 #### Creating categories
@@ -130,9 +130,9 @@ $category->setName('Cloths');
 
 $newCategories = $integrator->category()->export($category);
 
- ```
+```
  ##### Multiple categories
- ```
+```
  use Maverickslab\Integration\BigCommerce\Store\Model\Category;
 
 $category1 = new Category();
@@ -150,7 +150,7 @@ $category3->setParentId(1);
 
 $newCategories = $integrator->category()->export($category1, $category2, $category3);
 
-  ```
+```
 `$newCategories` will is an array of Categories, `Maverickslab\Integration\BigCommerce\Store\Model\Category[]`, both when creating single and multiple categories.
 
 #### Updating existing categories
@@ -161,7 +161,7 @@ $categoryToUpdate->setId(2); //REQUIRED
 $categoryToUpdate->setName('Aeroplanes');
 
 $updatedCategories = $integrator->category()->exportUpdate($categoryToUpdate);
- ```
+```
 **TIP: You can pass as many categories as like. They will all be updated and returned.**
 
 #### Deleting categories
@@ -177,12 +177,12 @@ $deleteCounts = $integrator->category()->deleteByIds(1, 2, 3, 4, 5);
 
 $ids = [1, 2, 3, 4, 5];
 $deleteCounts = $integrator->category()->deleteByIds(...$ids);
- ```
+```
  ##### Deleting by instance
 
  **NOTE: Only categories with non-zero IDs will be sent to BigCommerce for deletion**
 
- ```php
+```php
  $categories = [new Category(), new Category(), new Category()];
 
  $deleteCounts = $integrator->category()->delete(...$categories);
@@ -190,7 +190,7 @@ $deleteCounts = $integrator->category()->deleteByIds(...$ids);
 #### Importing products
 ```
 $allProducts = $integrator->product()->import();
- ```
+```
  `$allProducts` is an array products,`Maverickslab\Integration\BigCommerce\Store\Model\Product[]`, of all products in the store.
 
  
