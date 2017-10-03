@@ -19,12 +19,6 @@
             "Maverickslab\\Integration\\BigCommerce\\": "src"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "https://bitbucket.org/maverickslab/bigcommerce"
-        }
-    ],
     "require-dev": {
         "phpunit/phpunit": "^6.3"
     },
