@@ -67,10 +67,7 @@ class ProductRepositoryTest extends BaseRepositoryTest
             
             $this->assertInstanceOf(Product::class, $product);
             
-            foreach ($product->getCategories() as $category) {
-                $this->assertNotNull($category);
-                $this->assertInstanceOf(Category::class, $category);
-            }
+            $this->assertContainsOnlyInstancesOf(Category::class, $product->getCategories());
         }
     }
 
@@ -114,7 +111,7 @@ class ProductRepositoryTest extends BaseRepositoryTest
         
         for ($counter = 0; $counter <= count($product->getImages()); $counter ++) {
             $this->mockHandler->append(new Response(200, $this->responseHeaders, $this->readResponseFile('image/create.json')));
-        }        
+        }
         
         $exportedProducts = [];
         
@@ -126,7 +123,7 @@ class ProductRepositoryTest extends BaseRepositoryTest
         
         $this->assertInstanceOf(Product::class, $exportedProducts[0]);
     }
-    
+
     /**
      * @dataProvider productDataProvider
      *

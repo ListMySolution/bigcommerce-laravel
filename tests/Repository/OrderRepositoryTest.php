@@ -61,10 +61,8 @@ class OrderRepositoryTest extends BaseRepositoryTest
         
         $this->assertCount($orderCounts, $orders);
         
-        foreach ($orders as $order) {
-            $this->assertNotNull($order);
-            $this->assertInstanceOf(Order::class, $order);
-        }
+        $this->assertContainsOnlyInstancesOf(Order::class, $orders);
+        
     }
 
     public function testImportById()
@@ -105,10 +103,8 @@ class OrderRepositoryTest extends BaseRepositoryTest
         
         $this->assertCount($statusCounts, $statuses);
         
-        foreach ($statuses as $status) {
-            $this->assertNotNull($status);
-            $this->assertInstanceOf(OrderStatus::class, $status);
-        }
+        $this->assertContainsOnlyInstancesOf(OrderStatus::class, $statuses);
+        
     }
 
     public function testImportBetweenDates()
@@ -135,10 +131,7 @@ class OrderRepositoryTest extends BaseRepositoryTest
         
         $this->assertCount($orderCounts, $orders);
         
-        foreach ($orders as $order) {
-            $this->assertNotNull($order);
-            $this->assertInstanceOf(Order::class, $order);
-        }
+        $this->assertContainsOnlyInstancesOf(Order::class, $orders);
     }
 
     public function testImportByFilters()
@@ -168,10 +161,8 @@ class OrderRepositoryTest extends BaseRepositoryTest
         
         $this->assertCount($orderCounts, $orders);
         
-        foreach ($orders as $order) {
-            $this->assertNotNull($order);
-            $this->assertInstanceOf(Order::class, $order);
-        }
+        $this->assertContainsOnlyInstancesOf(Order::class, $orders);
+      
     }
 
     public function orderDataProvider(): array
@@ -236,10 +227,8 @@ class OrderRepositoryTest extends BaseRepositoryTest
         
         $this->assertCount($orderCounts, $updatedOrders);
         
-        foreach ($updatedOrders as $order) {
-            $this->assertNotNull($order);
-            $this->assertInstanceOf(Order::class, $order);
-        }
+        $this->assertContainsOnlyInstancesOf(Order::class, $updatedOrders);
+        
     }
 
     /**
