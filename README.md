@@ -49,7 +49,7 @@ Add the code below to your composer.json file and update it.
 
 #### Initialization
 
-```php
+```
 <?php
 use Maverickslab\Integration\BigCommerce\BigCommerceIntegrator;
 
@@ -61,12 +61,12 @@ $storeId = '';
 $integrator = new BigCommerceIntegrator($authToken, $clientId, $clientSecret, $storeId);
  ```
 #### Fetch store/merchant information
-```php
+```
 <?php 
 $merchant = $integrator->merchant()->details();
  ```
  `$merchant` is an instance of `Maverickslab\Integration\BigCommerce\Store\Model\Merchant`. You can now access merchant details as follows.
-```php
+```
     // Get store Id
     echo $merchant->getId(), PHP_EOL;
     
@@ -101,11 +101,11 @@ $merchant = $integrator->merchant()->details();
 
  #### Importing all product categories
 
-```php
+```
 $categories = $integrator->category()->import();
  ```
  `$categories` is an array of Categories, `Maverickslab\Integration\BigCommerce\Store\Model\Category[]`. You can access details of individual categories as follows.
- ```php
+ ```
  foreach ($categories as $category) {
      //Get id
     echo $category->getId(), PHP_EOL;
@@ -124,7 +124,7 @@ Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Category` on how to a
 
 #### Creating categories
 ##### Single category
-```php
+```
 $category = new Maverickslab\Integration\BigCommerce\Store\Model\Category();
 $category->setName('Cloths');
 
@@ -132,7 +132,7 @@ $newCategories = $integrator->category()->export($category);
 
  ```
  ##### Multiple categories
- ```php
+ ```
  use Maverickslab\Integration\BigCommerce\Store\Model\Category;
 
 $category1 = new Category();
@@ -166,7 +166,7 @@ $updatedCategories = $integrator->category()->exportUpdate($categoryToUpdate);
 
 #### Deleting categories
 ##### Deleting by Id
-```php
+```
 //Single deletion
 $deleteCounts = $integrator->category()->deleteByIds(1);
 
