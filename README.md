@@ -25,7 +25,25 @@ The package comes with repositories for the individual entities (Merchant, Categ
 This package requires PHP version 7.1 and above.
 
 ### Installation
-```composer require mavericks-lab/bigcommerce-integration```
+Add the code below to your composer.json file and update it.
+```
+{
+    "repositories": [
+     {
+            "type": "vcs",
+            "url":  "https://bitbucket.org/maverickslab/bigcommerce"
+        },
+        {
+            "type": "vcs",
+            "url": "https://bitbucket.org/maverickslab/bigcommerce-laravel"
+        }
+    ],
+    "require": {
+        "mavericks-lab/bigcommerce": "dev-master",
+        "mavericks-lab/bigcommerce-integration": "dev-master"
+    }
+}
+```
 
 ### Usage [basic]
 
@@ -152,7 +170,7 @@ $updatedCategories = $integrator->category()->exportUpdate($categoryToUpdate);
 //Single deletion
 $deleteCounts = $integrator->category()->deleteByIds(1);
 
-//Multiple deleting
+//Multiple deletion
 $deleteCounts = $integrator->category()->deleteByIds(1, 2, 3, 4, 5);
 
 //OR
