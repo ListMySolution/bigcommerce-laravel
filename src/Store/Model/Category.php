@@ -481,6 +481,20 @@ class Category extends BaseModel
     }
 
     /**
+     *
+     * {@inheritdoc}
+     * @see \Maverickslab\Integration\BigCommerce\Store\Model\BaseModel::toBigCommerceEntity()
+     */
+    public function toBigCommerceEntity(): array
+    {
+        $entityArray = parent::toBigCommerceEntity();
+        
+        unset($entityArray['id']);
+        
+        return $entityArray;
+    }
+
+    /**
      * Creates an instance of this class from a BigCommerce entity/model
      *
      * @param mixed $model

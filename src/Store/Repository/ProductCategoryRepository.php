@@ -73,9 +73,13 @@ class ProductCategoryRepository extends BaseRepository
      */
     public function exportUpdate(Category ...$categories): array
     {
+        $filteredCategories = array_filter($categories, function (Category $category) {
+            return $category->getId();
+        });
+        
         $promises = array_map(function (Category $category) {
             return $this->bigCommerce->category()->update($category->getId(), $category->toBigCommerceEntity());
-        }, $categories);
+        }, $filteredCategories);
         
         $responses = $this->bigCommerce->category()
             ->resolvePromises($promises)
@@ -86,6 +90,40 @@ class ProductCategoryRepository extends BaseRepository
             
             return Category::fromBigCommerce($responseData->data);
         }, $responses);
+    }
+
+    /**
+     * Deletes categories by Id
+     *
+     * @param int $categoryIds
+     * @return int
+     */
+    public function deleteByIds(int $categoryIds): int
+    {
+        $promises = array_map(function ($categoryId) {
+            return $this->bigCommerce->category()->deleteById($categoryId);
+        }, array_filter($categoryIds));
+        
+        $responses = $this->bigCommerce->category()
+            ->resolvePromises($promises)
+            ->wait();
+        
+        return count($responses);
+    }
+
+    /**
+     * Deletes a collection of categories
+     * 
+     * @param Category ...$categories
+     * @return int
+     */
+    public function delete(Category ...$categories): int
+    {
+        $categoryIds = array_map(function (Category $category) {
+            return $category->getId();
+        }, $categories);
+        
+        return $this->deleteByIds($categoryIds);
     }
 
     /**
