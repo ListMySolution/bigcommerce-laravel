@@ -297,3 +297,7 @@ $createdProducts = $integrator->product()->export($product);
 #### Updating existing products on BigCommerce
 
 **NOTE: Only products with non-zero IDs will be sent to BigCommerce for update.**
+
+```
+
+```

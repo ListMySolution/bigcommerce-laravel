@@ -173,9 +173,13 @@ class ProductRepository extends BaseRepository
      */
     public function exportUpdate(Product ...$products): array
     {
-        $promises = array_map(function (Product $product) {
-            return $this->bigCommerce->product()->update($product->getId(), $product->toBigCommerceEntity());
-        }, $products);
+        $promises = [];
+        
+        foreach ($products as $product) {
+            if ($product->getId()) {
+                $promises[] = $this->bigCommerce->product()->update($product->getId(), $product->toBigCommerceEntity());
+            }
+        }
         
         $responses = $this->bigCommerce->product()
             ->resolvePromises($promises)
