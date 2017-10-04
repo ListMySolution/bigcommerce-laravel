@@ -192,9 +192,98 @@ $deleteCounts = $integrator->category()->deleteByIds(...$ids);
 ```
 #### Importing products
 
+##### All products
+
 ```
 $allProducts = $integrator->product()->import();
 ```
- `$allProducts` is an array products,`Maverickslab\Integration\BigCommerce\Store\Model\Product[]`, of all products in the store.
+`$allProducts` is an arrays of products,`Maverickslab\Integration\BigCommerce\Store\Model\Product[]`, of all products in the store.
 
+##### Products matching a set of filters
+```
+$filters = array(
+    'type' => 'physical' //Import only physical products
+);
+
+$filteredProducts = $integrator->product()->import($filters);
+```
+ `$filteredProducts` is an arrays of products,`Maverickslab\Integration\BigCommerce\Store\Model\Product[]`, matching the specified filters.
+
+ #### Exporting products
+ New products can be imported one at a time or as a collection.
+
+##### Single product
+ ```
+ use Maverickslab\Integration\BigCommerce\Store\Model\Product;
  
+$newProduct = new Product();
+$newProduct->setName('Google pixel 2');
+$newProduct->setCondition(Product::CONDITION_NEW);
+$newProduct->setSKU('GOOPIX2');
+$newProduct->setPrice(880.50);
+$newProduct->setCategoryIds(1, 3);
+$newProduct->setWeight(2.4);
+$newProduct->setType(Product::TYPE_PHYSICAL);
+
+ $exportedProducts = $integrator->product()->export($newProduct);
+ ```
+ ##### Multiple products
+ ```
+use Maverickslab\Integration\BigCommerce\Store\Model\Product;
+$product1 = new Product();
+$product1->setName('Google pixel 2');
+$product1->setSKU('GOOPIX2');
+$product1->setPrice(880.50);
+$product1->setCategoryIds(1, 3);
+$product1->setWeight(2.4);
+$product1->setType(Product::TYPE_PHYSICAL);
+
+$product2 = new Product();
+$product2->setName('Google Nexus 5');
+$product2->setPrice(580);
+$product2->setCategoryIds(3);
+$product2->setWeight(4);
+$product2->setType(Product::TYPE_PHYSICAL);
+
+$product3 = new Product();
+$product3->setName('McAFEE Antivirus Plus');
+$product3->setPrice(80.50);
+$product3->setCategoryIds(1);
+$product3->setWeight(1.4);
+$product3->setType(Product::TYPE_DIGITAL);
+
+$exportedProducts = $integrator->product()->export($product1, $product2, $product3);
+ ```
+##### Products with variations
+
+```
+use Maverickslab\Integration\BigCommerce\Store\Model\{Product, ProductVariant, ProductOptionValue);
+
+//Create product
+$product = new Product();
+$product->setName('Google pixel 3');
+$product->setSKU('GOOPIX2');
+$product->setPrice(880.50);
+$product->setCategoryIds(1, 3);
+$product->setWeight(2.4);
+$product->setType(Product::TYPE_PHYSICAL);
+
+//Create variant
+$variant = new ProductVariant();
+$variant->setSKU('GOOPIX2-PLUS');
+$variant->setPrice(890);
+
+//Create option values for variant
+$optionValue = new ProductOptionValue();
+$optionValue->setOptionDisplayName('Colour');
+$optionValue->setLabel('Red');
+
+//Add option value to variant
+$variant->addOptionValues($optionValue);//You can add more than option value
+
+//Add variant to product
+$product->addVariants($variant); //You can add more than one variant
+
+//Export the product
+$createdProducts = $integrator->product()->export($product);
+```

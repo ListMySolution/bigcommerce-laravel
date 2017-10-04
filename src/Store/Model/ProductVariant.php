@@ -765,7 +765,7 @@ class ProductVariant extends BaseModel
     /**
      * Returns variant option value
      *
-     * @return array
+     * @return ProductOptionValue[]
      */
     public function getOptionValues(): array
     {
