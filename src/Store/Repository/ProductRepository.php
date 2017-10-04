@@ -6,6 +6,7 @@ use Maverickslab\Integration\BigCommerce\Store\Model\Category;
 use Maverickslab\Integration\BigCommerce\Store\Model\Product;
 use Maverickslab\Integration\BigCommerce\Store\Model\Image;
 use GuzzleHttp\Psr7\Response;
+use DateTime;
 
 /**
  * Product repository class
@@ -21,7 +22,18 @@ class ProductRepository extends BaseRepository
      *
      * @return Product[]
      */
-    public function import()
+    public function import(): array
+    {
+        return $this->importByFilters();
+    }
+
+    /**
+     * Imports products matching given filters
+     *
+     * @param array $filters
+     * @return Product[]
+     */
+    public function importByFilters(array $filters = []): array
     {
         $products = [];
         
@@ -39,7 +51,7 @@ class ProductRepository extends BaseRepository
         do {
             
             $response = $this->bigCommerce->product()
-                ->fetch($page ++, $limit, $includes)
+                ->fetch($page ++, $limit, $includes, [], [], $filters)
                 ->wait();
             
             $responseData = $this->decodeResponse($response);
