@@ -78,6 +78,23 @@ class ProductRepository extends BaseRepository
     }
 
     /**
+     * Imports a single product form BigCommerce
+     *
+     * @param int $id
+     * @return Product|NULL
+     */
+    public function importById(int $id): ?Product
+    {
+        $filters = array(
+            'id' => $id
+        );
+        
+        $matchedProducts = $this->import($filters);
+        
+        return count($matchedProducts) ? $matchedProducts[0] : null;
+    }
+
+    /**
      * Exports new products to BigCommerce
      *
      * @param Product ...$products

@@ -181,7 +181,7 @@ $deleteCounts = $integrator->category()->deleteByIds(1, 2, 3, 4, 5);
 $ids = [1, 2, 3, 4, 5];
 $deleteCounts = $integrator->category()->deleteByIds(...$ids);
 ```
- ##### Deleting by instance
+##### Deleting by instance
 
  **NOTE: Only categories with non-zero IDs will be sent to BigCommerce for deletion**
 
@@ -207,13 +207,19 @@ $filters = array(
 
 $filteredProducts = $integrator->product()->import($filters);
 ```
- `$filteredProducts` is an arrays of products,`Maverickslab\Integration\BigCommerce\Store\Model\Product[]`, matching the specified filters.
+`$filteredProducts` is an arrays of products,`Maverickslab\Integration\BigCommerce\Store\Model\Product[]`, matching the specified filters.
 
- #### Exporting products
+##### Import a single product by Id
+```
+ $id = 90;
+ $product = $integrator->product()->importById($id);
+```
+
+#### Exporting products
  New products can be imported one at a time or as a collection.
 
 ##### Single product
- ```
+```
  use Maverickslab\Integration\BigCommerce\Store\Model\Product;
  
 $newProduct = new Product();
@@ -226,9 +232,9 @@ $newProduct->setWeight(2.4);
 $newProduct->setType(Product::TYPE_PHYSICAL);
 
  $exportedProducts = $integrator->product()->export($newProduct);
- ```
- ##### Multiple products
- ```
+```
+##### Multiple products
+```
 use Maverickslab\Integration\BigCommerce\Store\Model\Product;
 $product1 = new Product();
 $product1->setName('Google pixel 2');
@@ -253,7 +259,7 @@ $product3->setWeight(1.4);
 $product3->setType(Product::TYPE_DIGITAL);
 
 $exportedProducts = $integrator->product()->export($product1, $product2, $product3);
- ```
+```
 ##### Products with variations
 
 ```
@@ -287,3 +293,6 @@ $product->addVariants($variant); //You can add more than one variant
 //Export the product
 $createdProducts = $integrator->product()->export($product);
 ```
+#### Updating existing products on BigCommerce
+
+**NOTE: Only products with non-zero IDs will be sent to BigCommerce for update.**
