@@ -2,6 +2,7 @@
 
 ### Description
 This package is for interacting with the BigCommerce platform. The package can be used to:
+
 1. **Manage store/merchant**
     + Fetch store/merchant information from BigCommerce
 
