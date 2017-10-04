@@ -6,7 +6,6 @@ use Maverickslab\Integration\BigCommerce\Store\Model\Category;
 use Maverickslab\Integration\BigCommerce\Store\Model\Product;
 use Maverickslab\Integration\BigCommerce\Store\Model\Image;
 use GuzzleHttp\Psr7\Response;
-use DateTime;
 
 /**
  * Product repository class
@@ -22,18 +21,7 @@ class ProductRepository extends BaseRepository
      *
      * @return Product[]
      */
-    public function import(): array
-    {
-        return $this->importByFilters();
-    }
-
-    /**
-     * Imports products matching given filters
-     *
-     * @param array $filters
-     * @return Product[]
-     */
-    public function importByFilters(array $filters = []): array
+    public function import(array $filters = []): array
     {
         $products = [];
         
