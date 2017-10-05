@@ -157,7 +157,7 @@ class OrderRepositoryTest extends BaseRepositoryTest
             'min_total' => 100
         );
         
-        $orders = $this->repository->importByFilters($filters);
+        $orders = $this->repository->import($filters);
         
         $this->assertCount($orderCounts, $orders);
         

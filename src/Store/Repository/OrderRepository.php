@@ -24,11 +24,12 @@ class OrderRepository extends BaseRepository
     /**
      * Imports all order from BigCommerce
      *
+     * @param array $filters
      * @return Order[]
      */
-    public function import(): array
+    public function import(array $filters = []): array
     {
-        return $this->importByFilters();
+        return $this->importByFilters($filters);
     }
 
     /**
@@ -56,9 +57,10 @@ class OrderRepository extends BaseRepository
      *
      * @param DateTime $startDateTime
      * @param DateTime $endDateTime
+     * @param array $additionalFilters
      * @return Order[]
      */
-    public function importBetweenDates(DateTime $startDateTime, DateTime $endDateTime = null): array
+    public function importBetweenDates(DateTime $startDateTime, DateTime $endDateTime = null, array $additionalFilters = []): array
     {
         $filters = [];
         
@@ -72,6 +74,8 @@ class OrderRepository extends BaseRepository
         
         $filters['max_date_created'] = $endDateTime->format(DateTime::RSS);
         
+        $filters = array_merge_recursive($filters, $additionalFilters);
+        
         return $this->importByFilters($filters);
     }
 
@@ -81,7 +85,7 @@ class OrderRepository extends BaseRepository
      * @param array $filters
      * @return array
      */
-    public function importByFilters(array $filters = []): array
+    protected function importByFilters(array $filters = []): array
     {
         // DO NOT INCREASE THE VALUE FOR LIMIT, 250 IS THE MAXIMUM LIMIT SUPPORTED BY BIGCOMMERCE API V2
         $limit = 250;

@@ -366,3 +366,27 @@ foreach($orders as $order) {
 ```
 Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Order` on how access other information about an order.
 
+You may also filter order by passing an array of filters to the `import()` as shown below.
+```
+//Import orders that are pending
+$filters = ['status_id' => 1];
+
+$orders = $integrator->order()->import($filters);
+```
+
+#### Importing order between dates
+The code below will import all orders that were made 30 days ago.
+
+```
+$startDateTime = new DateTime('30 days ago');
+$endDateTime = new DateTime();
+$orders = $integrator->order()->importBetweenDates($startDateTime, $endDateTime);
+
+//OR
+//If the second parameter is omitted, the current date and time will be used
+$orders = $integrator->order()->importBetweenDates($startDateTime);
+
+```
+**TIP: You may also pass an array of filters as a third parameter to the `importBetweenDates()` method.**
+
+
