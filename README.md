@@ -46,7 +46,7 @@ Add the code below to your composer.json file and update it.
 }
 ```
 
-### Usage [basic]
+### Usage
 
 #### Initialization
 
@@ -366,7 +366,7 @@ foreach($orders as $order) {
 ```
 Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Order` for more information on how to access other properties of an order.
 
-You may also filter order by passing an array of filters to the `import()` as shown below.
+You may also filter order by passing an array of filters to the `import()` method as shown below.
 ```
 //Import orders that are pending
 $filters = ['status_id' => 1];
@@ -374,7 +374,7 @@ $filters = ['status_id' => 1];
 $orders = $integrator->order()->import($filters);
 ```
 
-#### Importing order between dates
+#### Importing order that were made between two dates
 The code below will import all orders that were made 30 days ago.
 
 ```
@@ -410,3 +410,108 @@ foreach($statuses as $status) {
 Each order status is an instance of `Maverickslab\Integration\BigCommerce\Store\Model\OrderStatus`.
 
 #### Updating status of orders
+
+**NOTE: The only properties required to update an order's status are the Id and the status Id.**
+
+```
+$order1 = new Order();
+$order1->setId(1);
+$order1->setStatusId(0);//Incomplete
+
+$order2 = new Order();
+$order2->setId(1);
+$order2->setStatusId(10); //Completed
+
+$order3 = new Order();
+$order3->setId(3);
+$order3->setStatusId(11); //Awaiting Fulfillment
+
+$numberOfOrdersUpdate = $integrator->order()->exportUpdateOrderStatus($order1, $order2, $order3);
+```
+#### Importing customers
+
+```
+//Import all customers
+$customers = $integrator->customer()->import();
+
+//Read customer properties
+foreach($customers as $customer) {
+    //Get customer Id
+    $customer->getId();
+
+    //Get customer first name
+    $customer->getFirstName();
+
+    //Get customer last name
+    $customer->getLastName();
+
+    //Get customer's compoany
+    $customer->getCompany();
+
+    //Get customer email address
+    $customer->getEmail();
+
+    //Get customer phone number
+    $customer->getPhone();
+
+    //Get customer store credit
+    $customer->getStoreCredit();
+
+    //Get customer group Id
+    $customer->getGroupId();
+
+    //Read customer's addresses
+    foreach($customer->getAddresses() as $address) {
+        //Get country
+        $address->getCountry();
+
+        //Get state
+        $address->getState();
+
+        //Get city
+        $address->getCity();
+
+        //Get streets
+        $address->getStreetOne();
+        $address->getStreetTwo();
+
+        //Get address type
+        $address->getType();
+    }
+
+}
+```
+See `Maverickslab\Integration\BigCommerce\Store\Model\Customer` for more information on how to access other properties of a customer.
+
+#### Exporting customers
+
+```
+use Maverickslab\Integration\BigCommerce\Store\Model\Customer;
+
+$customer = new Customer();
+$customer->setFirstName('George');
+$customer->setLastName('Smith');
+$customer->setEmail('smithgeorge@somedomain.com');
+$customer->setPhone('+2337885788575');
+//Add more properties
+
+$exportedCustomers = $integrator->customer()->export($customer);
+```
+#### Updating existing customers
+
+**NOTE: Only customers with non-zero IDs will sent to BigCommerce for update.**
+```
+$customers = [new Customer(), new Customer(), new Customer()];
+
+$updatedCustomers = $integrator->customer()->exportUpdate(...$customers);
+```
+#### Deleting existing customers
+```
+//Delete a single customer by Id
+$id = 3;
+$deleteCounts = $integrator->customer()->deleteByIds($id);
+
+//Deleting multiple customers by Ids
+$ids = [3, 4, 5, 1];
+$deleteCounts = $integrator->customer()->deleteByIds(...$ids);
+```

@@ -49,7 +49,7 @@ class BigCommerceIntegrator
      *
      * @var CustomerRepository
      */
-    public $customerRepository;
+    protected $customerRepository;
 
     /**
      *

@@ -98,10 +98,14 @@ class CustomerRepository extends BaseRepository
      * @return Customer[]
      */
     public function exportUpdate(Customer ...$customers): array
-    {
-        $promises = array_map(function (Customer $customer) {
-            return $this->bigCommerce->customer()->update($customer->getId(), $customer->toBigCommerceEntity());
-        }, $customers);
+    {   
+        $promises = [];
+        
+        foreach ($customers as $customer) {
+            if ($customers->getId()) {
+                $promises[] = $this->bigCommerce->customer()->update($customer->getId(), $customer->toBigCommerceEntity());
+            }
+        }
         
         $responses = $this->bigCommerce->customer()
             ->resolvePromises($promises)
