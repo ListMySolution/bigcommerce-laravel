@@ -269,6 +269,29 @@ class ProductRepository extends BaseRepository
     }
 
     /**
+     * Deletes a number of products from BigCommerce
+     *
+     * @param Product ...$products
+     * @return int
+     */
+    public function delete(Product ...$products): int
+    {
+        return $this->deleteByIds(array_map(function (Product $product) {
+            return $product->getId();
+        }, $products));
+    }
+
+    /**
+     * Deletes products matching given filters
+     * 
+     * @param array $filters
+     */
+    public function deleteByFilter(array $filters = []): void
+    {
+        $this->bigCommerce->product()->delete($filters)->wait();
+    }
+
+    /**
      * Save a collection of products to local database
      *
      * @param Product ...$products

@@ -307,3 +307,62 @@ $products = [
 
 $updatedProducts = $integrator->product()->exportUpdate(...$products);
 ```
+#### Deleting products
+##### Deleting by IDs
+```
+$productIds = [2, 3, 5];
+$deleteCounts = $integrator->product()->deleteByIds(...$productIds);
+```
+##### Deleting by instances
+**NOTE: Products without valid Ids will be ignored**
+```
+$products = [new Product(), new Product(), new Product()];
+
+$deleteCounts = $integrator->product()->delete(...$products);
+```
+##### Deleting by filters
+```
+$filters = ['type' => 'digital', 'condition' => 'used'];
+
+$integrator->product()->deleteByFilter($filters);1
+```
+#### Importing orders
+##### Importing all orders
+```
+$orders = $integrator->order()->import();
+
+foreach($orders as $order) {
+    //Get ordered products
+    //Each ordered product is an instances of Maverickslab\Integration\BigCommerce\Store\Model\OrderedProduct
+    foreach($order->getProducts() as $orderedProduct) {
+        //Get product name
+        $orderedProduct->getName();
+
+        //Get quantity
+        $orderedProduct->getQuantity();
+    }
+
+    //Get customer information
+    //A customer is an instances of Maverickslab\Integration\BigCommerce\Store\Model\Customer
+    $order->getCustomer();
+
+    //Get billing address
+    //A billing address is an instance of Maverickslab\Integration\BigCommerce\Store\Model\BillingAddress
+    $order->getBillingAddress();
+
+    //Get shipping addresses
+    //Each shipping address is an instance of Maverickslab\Integration\BigCommerce\Store\Model\ShippingAddress
+    $order->getShippingAddresses();
+
+    //Get total items in order
+    $order->getItemsTotal();
+
+    //Get total cost of order excluding tax
+    $order->getTotalExcludingTax();
+
+    //Get total cost of order including tax
+    $order->getTotalIncludingTax();
+}
+```
+Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Order` on how access other information about an order.
+
