@@ -364,7 +364,7 @@ foreach($orders as $order) {
     $order->getTotalIncludingTax();
 }
 ```
-Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Order` on how access other information about an order.
+Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Order` for more information on how to access other properties of an order.
 
 You may also filter order by passing an array of filters to the `import()` as shown below.
 ```
@@ -389,4 +389,24 @@ $orders = $integrator->order()->importBetweenDates($startDateTime);
 ```
 **TIP: You may also pass an array of filters as a third parameter to the `importBetweenDates()` method.**
 
+#### Importing order status
+```
+$statuses = $integrator->order()->importStatuses();
 
+foreach($statuses as $status) {
+    //Get status Id
+    $status->getId();
+
+    //Get status name
+    $status->getName();
+
+    //Get status description
+    $status->getSystemDescription();
+
+    //Get custom label 
+    $status->getCustomLabel();
+}
+```
+Each order status is an instance of `Maverickslab\Integration\BigCommerce\Store\Model\OrderStatus`.
+
+#### Updating status of orders

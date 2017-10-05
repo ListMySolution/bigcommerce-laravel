@@ -213,6 +213,31 @@ class OrderRepository extends BaseRepository
     }
 
     /**
+     * Updates status for a collection of orders
+     *
+     * @param Order ...$orders
+     * @return int Number of order updated
+     */
+    public function exportUpdateOrderStatus(Order ...$orders): int
+    {
+        $promises = [];
+        
+        foreach ($orders as $order) {
+            if ($order->getId() && null !== $order->getStatusId()) {
+                $promises[] = $this->bigCommerce->order()->update($order->getId(), array(
+                    'status_id' => $order->getStatusId()
+                ));
+            }
+        }
+        
+        $responses = $this->bigCommerce->order()
+            ->resolvePromises($promises)
+            ->wait();
+        
+        return count($responses);
+    }
+
+    /**
      * Imports all order statuses from BigCommerce
      *
      * @return OrderStatus[]
