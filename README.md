@@ -70,35 +70,35 @@ $merchant = $integrator->merchant()->details();
 `$merchant` is an instance of `Maverickslab\Integration\BigCommerce\Store\Model\Merchant`. You can now access merchant details as follows.
 
 ```
-    // Get store Id
-    echo $merchant->getId(), PHP_EOL;
+// Get store Id
+echo $merchant->getId(), PHP_EOL;
     
-    // Get store plan name
-    echo $merchant->getPlanName(), PHP_EOL;
+// Get store plan name
+echo $merchant->getPlanName(), PHP_EOL;
     
-    // Get store plan level
-    echo $merchant->getPlanLevel(), PHP_EOL;
+// Get store plan level
+echo $merchant->getPlanLevel(), PHP_EOL;
     
-    // Get merchant/store name
-    echo $merchant->getName(), PHP_EOL;
+// Get merchant/store name
+echo $merchant->getName(), PHP_EOL;
     
-    // Get merchant first name
-    echo $merchant->getFirstName(), PHP_EOL;
+// Get merchant first name
+echo $merchant->getFirstName(), PHP_EOL;
     
-    // Get merchant last name
-    echo $merchant->getLastName(), PHP_EOL;
+// Get merchant last name
+echo $merchant->getLastName(), PHP_EOL;
     
-    // Get store admin email
-    echo $merchant->getAdminEmail(), PHP_EOL;
+// Get store admin email
+echo $merchant->getAdminEmail(), PHP_EOL;
     
-    // Get store address
-    echo $merchant->getAddress(), PHP_EOL;
+// Get store address
+echo $merchant->getAddress(), PHP_EOL;
     
-    // Get country name
-    echo $merchant->getCountry(), PHP_EOL;
+// Get country name
+echo $merchant->getCountry(), PHP_EOL;
     
-    // Get currency
-    echo $merchant->getCurrency(), PHP_EOL;
+// Get currency
+echo $merchant->getCurrency(), PHP_EOL;
 ```
  Refer to `Maverickslab\Integration\BigCommerce\Store\Model\Merchant` for other details.
 
@@ -299,5 +299,11 @@ $createdProducts = $integrator->product()->export($product);
 **NOTE: Only products with non-zero IDs will be sent to BigCommerce for update.**
 
 ```
+$products = [
+    new Product(),
+    new Product(),
+    new Product()
+];
 
+$updatedProducts = $integrator->product()->exportUpdate(...$products);
 ```
