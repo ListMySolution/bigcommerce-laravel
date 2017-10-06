@@ -549,7 +549,7 @@ class SyncommerceRepositoryWriter extends RepositoryWriter {
     }
 }
 ```
-The newly create repository writer can be used as shown below.
+The newly created repository writer can be used as shown below.
 ```
 use Maverickslab\Integration\BigCommerce\BigCommerceIntegrator;
 
