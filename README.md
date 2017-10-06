@@ -19,6 +19,10 @@ This package is for interacting with the BigCommerce platform. The package can b
     + Import customers from a store on BigCommerce
     + Add one or more customer to a store on BigCommerce
     + Update customer information for a store on BigCommerce
+5. **Writing to local application database**
+    + Write products and related information to application database
+    + Write order and related information to application database
+    + Write customer and related information to application database
 
 The package comes with repositories for the individual entities (Merchant, Category, Product, Order, Customer). It also comes with a class that combines all the other repositories into one.
 
@@ -515,3 +519,55 @@ $deleteCounts = $integrator->customer()->deleteByIds($id);
 $ids = [3, 4, 5, 1];
 $deleteCounts = $integrator->customer()->deleteByIds(...$ids);
 ```
+#### Writing to local application database
+You don't need this library to write to your application database for you. However, if you wish to do so, you must implement or extend a class the implements the`Maverickslab\Integration\BigCommerce\Store\Repository\Writer\RepositoryWriterInterface` interface.
+
+To make it easy to use the library to write models to your local database, there's an empty implementation of the `RepositoryWriterInterface`, `Maverickslab\Integration\BigCommerce\Store\Repository\Writer\RepositoryWriter`, that you  can extend and override the methods that you need to work with your database. Below is an example of how to write products to a local database.
+
+```
+use Maverickslab\Integration\BigCommerce\Store\Repository\Writer\RepositoryWriter;
+use Maverickslab\Integration\BigCommerce\Store\Model\Product;
+
+class SyncommerceRepositoryWriter extends RepositoryWriter {
+
+    /**
+     * 
+     * {@inheritDoc}
+     * @see \Maverickslab\Integration\BigCommerce\Store\Repository\Writer\RepositoryWriter::createProducts()
+     */
+    public function createProducts(Product ...$products): array {
+        //Format product
+        $formattedProductsArray = array_map(function(Product $product){
+            return $product->toArray();
+        }, $products);
+
+        //Save products to database
+        DB::table('products')->insert($formattedProductsArray);
+
+        //Returns the saved products or an empty array
+        return [];
+    }
+}
+```
+The newly create repository writer can be used as shown below.
+```
+use Maverickslab\Integration\BigCommerce\BigCommerceIntegrator;
+
+$authToken = '';
+$clientId = '';
+$clientSecret = '';
+$storeId = '';
+$repositoryWriter = new SyncommerceRepositoryWriter();
+
+//Pass the repository writer as the fifth parameter
+$integrator = new BigCommerceIntegrator($authToken, $clientId, $clientSecret, $storeId, $repositoryWriter);
+
+//Import products from BigCommerce 
+$importedProducts = $integrator->product()->import();
+
+//Save imported products locally
+$savedProducts = $integrator->product()->save(...$importedProducts);
+```
+
+
+
