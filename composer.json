@@ -9,7 +9,14 @@
             "email": "cosman@syncommerceapp.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://bitbucket.org/maverickslab/bigcommerce"
+        }
+    ],
     "require": {
+        "mavericks-lab/bigcommerce": "dev-master",
         "illuminate/support": "^5.5"
     },
     "autoload": {
@@ -21,9 +28,9 @@
         "phpunit/phpunit": "^6.3"
     },
     "autoload-dev": {
-	    "psr-4": {
-	        "Maverickslab\\Integration\\BigCommerce\\Test\\": "tests"
-	    }
-	},
-	"minimum-stability": "dev"
+        "psr-4": {
+            "Maverickslab\\Integration\\BigCommerce\\Test\\": "tests"
+        }
+    },
+    "minimum-stability": "dev"
 }
