@@ -159,6 +159,12 @@ class Product extends BaseModel
 
     /**
      *
+     * @var Brand
+     */
+    protected $brand;
+
+    /**
+     *
      * @var int
      */
     protected $inventory_level;
@@ -917,6 +923,31 @@ class Product extends BaseModel
     {
         if ($id) {
             $this->brand_id = $id;
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Return product brand
+     *
+     * @return Brand|NULL
+     */
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    /**
+     * Sets product brand
+     *
+     * @param Brand $brand
+     * @return self
+     */
+    public function setBrand(?Brand $brand): self
+    {
+        if ($brand) {
+            $this->brand = $brand;
         }
         
         return $this;
@@ -1791,6 +1822,13 @@ class Product extends BaseModel
             }
             
             $instance->setBrandId((int) static::readAttribute($model, 'brand_id'));
+            
+            $brand = static::readAttribute($model, 'brand');
+            
+            if(null !== $brand) {
+                $instance->setBrand(Brand::fromBigCommerce($brand));
+            }
+            
             $instance->setInventoryLevel((int) static::readAttribute($model, 'inventory_level'));
             $instance->setInventoryWarningLevel((int) static::readAttribute($model, 'inventory_warning_level'));
             $instance->setInventoryTracking((string) static::readAttribute($model, 'inventory_tracking'));

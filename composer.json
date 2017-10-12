@@ -12,7 +12,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://bitbucket.org/maverickslab/bigcommerce"
+            "url": "cossay@bitbucket.org:maverickslab/bigcommerce.git"
         }
     ],
     "require": {

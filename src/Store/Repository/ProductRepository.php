@@ -6,6 +6,7 @@ use Maverickslab\Integration\BigCommerce\Store\Model\Category;
 use Maverickslab\Integration\BigCommerce\Store\Model\Product;
 use Maverickslab\Integration\BigCommerce\Store\Model\Image;
 use GuzzleHttp\Psr7\Response;
+use Maverickslab\Integration\BigCommerce\Store\Model\Brand;
 
 /**
  * Product repository class
@@ -36,6 +37,8 @@ class ProductRepository extends BaseRepository
         
         $categoryPromises = [];
         
+        $brandPromises = [];
+        
         do {
             
             $response = $this->bigCommerce->product()
@@ -59,19 +62,33 @@ class ProductRepository extends BaseRepository
                         
                         $categoryPromises[$product->getId()] = $this->bigCommerce->category()->resolvePromises($productCategoryPromises);
                     }
+                    
+                    if ($product->getBrandId()) {
+                        $brandPromises[$product->getId()] = $this->bigCommerce->product()->fetchBrandById($product->getBrandId());
+                    }
                 }
             }
         } while ($page <= $totalPages);
         
-        $categoryResponses = $this->bigCommerce->category()
-            ->resolvePromises($categoryPromises)
+        $allPromises = array(
+            'categories' => $this->bigCommerce->category()->resolvePromises($categoryPromises),
+            'brands' => $this->bigCommerce->product()->resolvePromises($brandPromises)
+        );
+        
+        $bulkResponses = $this->bigCommerce->product()
+            ->resolvePromises($allPromises)
             ->wait();
         
-        foreach ($categoryResponses as $productId => $categoryResponseArray) {
+        foreach ($bulkResponses['categories'] as $productId => $categoryResponseArray) {
             foreach ($categoryResponseArray as $categoryResponse) {
                 $categoryResponseData = $this->decodeResponse($categoryResponse);
                 $products[$productId]->addCategory(Category::fromBigCommerce($categoryResponseData->data));
             }
+        }
+        
+        foreach ($bulkResponses['brands'] as $productId => $brandResponse) {
+            $brandResponseData = $this->decodeResponse($brandResponse);
+            $products[$productId]->setBrand(Brand::fromBigCommerce($brandResponseData->data));
         }
         
         return array_values($products);
@@ -249,6 +266,119 @@ class ProductRepository extends BaseRepository
     }
 
     /**
+     * Fetches available product brands
+     *
+     * @return Brand[]
+     */
+    public function importBrands(): array
+    {
+        $page = 1;
+        $limit = 1000;
+        $brands = [];
+        $itemsReturnedForCurrentRequest = 0;
+        
+        do {
+            $response = $this->bigCommerce->product()
+                ->fetchBrands($page ++, $limit)
+                ->wait();
+            
+            $responseData = $this->decodeResponse($response);
+            
+            if (is_array($responseData->data)) {
+                
+                $itemsReturnedForCurrentRequest = count($responseData->data);
+                
+                foreach ($responseData->data as $brandModel) {
+                    $brands[] = Brand::fromBigCommerce($brandModel);
+                }
+            }
+        } while ($limit === $itemsReturnedForCurrentRequest);
+        
+        return $brands;
+    }
+
+    /**
+     * Exports a collection of brands to bigcommerce
+     *
+     * @param Brand ...$brands
+     * @return Brand[]
+     */
+    public function exportBrands(Brand ...$brands): array
+    {
+        $promises = [];
+        
+        foreach ($brands as $brand) {
+            if (! $brand->getId()) {
+                $promises[] = $this->bigCommerce->product()->createBrand($brand->toBigCommerceEntity());
+            }
+        }
+        
+        $responses = $this->bigCommerce->product()
+            ->resolvePromises($promises)
+            ->wait();
+        
+        $createdBrands = [];
+        
+        foreach ($responses as $response) {
+            $responseData = $this->decodeResponse($response);
+            
+            $createdBrands[] = Brand::fromBigCommerce($responseData->data);
+        }
+        
+        return $createdBrands;
+    }
+
+    /**
+     * Updates a collection of brands
+     *
+     * @param Brand ...$brands
+     * @return Brand[]
+     */
+    public function exportUpdateBrands(Brand ...$brands): array
+    {
+        $promises = [];
+        
+        foreach ($brands as $brand) {
+            if ($brand->getId()) {
+                $promises[] = $this->bigCommerce->product()->updateBrand($brand->getId(), $brand->toBigCommerceEntity());
+            }
+        }
+        
+        $responses = $this->bigCommerce->product()
+            ->resolvePromises($promises)
+            ->wait();
+        
+        $updatedBrands = [];
+        
+        foreach ($responses as $response) {
+            $responseData = $this->decodeResponse($response);
+            
+            $updatedBrands[] = Brand::fromBigCommerce($responseData->data);
+        }
+        
+        return $updatedBrands;
+    }
+
+    /**
+     * Deletes a collection of brands by their ids
+     *
+     * @param int ...$ids
+     * @return int
+     */
+    public function deleteBrandsById(int ...$ids): int
+    {
+        $promises = array_map(function (int $id) {
+            return $this->bigCommerce->product()->deleteBrandById($id);
+        }, array_filter($ids));
+        
+        $responses = $this->bigCommerce->product()
+            ->resolvePromises($promises)
+            ->wait();
+        
+        return count($promises);
+    }
+
+    /**
      * 1
      * Deletes a number of products by Id1
      *
@@ -283,12 +413,14 @@ class ProductRepository extends BaseRepository
 
     /**
      * Deletes products matching given filters
-     * 
+     *
      * @param array $filters
      */
     public function deleteByFilter(array $filters = []): void
     {
-        $this->bigCommerce->product()->delete($filters)->wait();
+        $this->bigCommerce->product()
+            ->delete($filters)
+            ->wait();
     }
 
     /**
