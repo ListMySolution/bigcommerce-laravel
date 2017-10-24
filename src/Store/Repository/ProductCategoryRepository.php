@@ -12,7 +12,7 @@ class ProductCategoryRepository extends BaseRepository
      * Imports all categories from BigCommerce
      *
      * @param array $filters
-     * @return Category[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Category[]
      */
     public function import(array $filters = []): array
     {
@@ -40,7 +40,7 @@ class ProductCategoryRepository extends BaseRepository
      * @param int $page
      * @param int $limit
      * @param array $filters
-     * @return Category[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Category[]
      */
     public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
     {
@@ -64,7 +64,7 @@ class ProductCategoryRepository extends BaseRepository
     /**
      * Exports a collection of categories to BigCommerce
      *
-     * @param Category ...$categories
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Category ...$categories
      * @return \Maverickslab\Integration\BigCommerce\Store\Model\Category[]
      */
     public function export(Category ...$categories): array
@@ -90,8 +90,8 @@ class ProductCategoryRepository extends BaseRepository
     /**
      * Updates a collection of categories on BigCommerce
      *
-     * @param Category ...$categories
-     * @return Category[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Category ...$categories
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Category[]
      */
     public function exportUpdate(Category ...$categories): array
     {
@@ -136,7 +136,7 @@ class ProductCategoryRepository extends BaseRepository
     /**
      * Deletes a collection of categories
      *
-     * @param Category ...$categories
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Category ...$categories
      * @return int
      */
     public function delete(Category ...$categories): int
@@ -151,8 +151,8 @@ class ProductCategoryRepository extends BaseRepository
     /**
      * Saves a collection categories locally
      *
-     * @param Category ...$categories
-     * @return Category[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Category ...$categories
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Category[]
      */
     public function save(Category ...$categories): array
     {
@@ -162,8 +162,8 @@ class ProductCategoryRepository extends BaseRepository
     /**
      * Updates a collection of categories locally
      *
-     * @param Category ...$categories
-     * @return Category[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Category ...$categories
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Category[]
      */
     public function update(Category ...$categories): array
     {

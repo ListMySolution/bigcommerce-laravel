@@ -16,7 +16,7 @@ class MerchantRepository extends BaseRepository
     /**
      * Reads merchant/store details from BigCommerce
      *
-     * @return Merchant|NULL
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Merchant|NULL
      */
     public function details(): ?Merchant
     {

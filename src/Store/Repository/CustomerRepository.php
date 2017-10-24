@@ -18,7 +18,7 @@ class CustomerRepository extends BaseRepository
      * Imports all customer from a store on BigCommerce
      *
      * @param array $filters
-     * @return Customer[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Customer[]
      */
     public function import(array $filters = []): array
     {
@@ -44,7 +44,7 @@ class CustomerRepository extends BaseRepository
      * Imports a single customer by Id
      *
      * @param int $id
-     * @return Customer|NULL
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Customer|NULL
      */
     public function importById(int $id): ?Customer
     {
@@ -64,7 +64,7 @@ class CustomerRepository extends BaseRepository
      * @param int $page
      * @param int $limit
      * @param array $filters
-     * @return Customer[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Customer[]
      */
     public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
     {
@@ -108,8 +108,8 @@ class CustomerRepository extends BaseRepository
     /**
      * Exports a collection of customers to BigCommerce
      *
-     * @param Customer ...$customers
-     * @return Customer[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Customer ...$customers
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Customer[]
      */
     public function export(Customer ...$customers): array
     {
@@ -134,8 +134,8 @@ class CustomerRepository extends BaseRepository
     /**
      * Updates a collection of customer on BigCommerce
      *
-     * @param Customer ...$customers
-     * @return Customer[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Customer ...$customers
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Customer[]
      */
     public function exportUpdate(Customer ...$customers): array
     {
@@ -164,7 +164,7 @@ class CustomerRepository extends BaseRepository
     /**
      * Deletes a collection of customer on BigCommerce
      *
-     * @param Customer ...$customers
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Customer ...$customers
      * @return void
      */
     public function delete(Customer ...$customers): void

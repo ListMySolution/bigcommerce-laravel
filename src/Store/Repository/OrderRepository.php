@@ -25,7 +25,7 @@ class OrderRepository extends BaseRepository
      * Imports all order from BigCommerce
      *
      * @param array $filters
-     * @return Order[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Order[]
      */
     public function import(array $filters = []): array
     {
@@ -36,7 +36,7 @@ class OrderRepository extends BaseRepository
      * Imports a single order by Id
      *
      * @param int $id
-     * @return Order|NULL
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Order|NULL
      */
     public function importById(int $id): ?Order
     {
@@ -56,7 +56,7 @@ class OrderRepository extends BaseRepository
      * @param DateTime $startDateTime
      * @param DateTime $endDateTime
      * @param array $additionalFilters
-     * @return Order[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Order[]
      */
     public function importBetweenDates(DateTime $startDateTime, DateTime $endDateTime = null, array $additionalFilters = []): array
     {
@@ -81,7 +81,7 @@ class OrderRepository extends BaseRepository
      * Imports order from BigCommerce matching a given sets of filters
      *
      * @param array $filters
-     * @return array
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Order[]
      */
     protected function importByFilters(array $filters = []): array
     {
@@ -110,7 +110,7 @@ class OrderRepository extends BaseRepository
      * @param int $page
      * @param int $limit
      * @param array $filters
-     * @return Order[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Order[]
      */
     public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
     {
@@ -207,8 +207,8 @@ class OrderRepository extends BaseRepository
     /**
      * Updates a number of order on BigCommerce
      *
-     * @param Order ...$orders
-     * @return Order[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Order ...$orders
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Order[]
      */
     public function exportUpdate(Order ...$orders): array
     {
@@ -233,7 +233,7 @@ class OrderRepository extends BaseRepository
     /**
      * Updates status for a collection of orders
      *
-     * @param Order ...$orders
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Order ...$orders
      * @return int Number of order updated
      */
     public function exportUpdateOrderStatus(Order ...$orders): int
@@ -258,7 +258,7 @@ class OrderRepository extends BaseRepository
     /**
      * Imports all order statuses from BigCommerce
      *
-     * @return OrderStatus[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\OrderStatus[]
      */
     public function importStatuses(): array
     {
@@ -289,8 +289,8 @@ class OrderRepository extends BaseRepository
     /**
      * Saves a number of order to local application database
      *
-     * @param Order ...$orders
-     * @return Order[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Order ...$orders
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Order[]
      */
     public function save(Order ...$orders): array
     {
@@ -300,8 +300,8 @@ class OrderRepository extends BaseRepository
     /**
      * Updates a number of order to local application database
      *
-     * @param Order ...$orders
-     * @return Order[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Order ...$orders
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Order[]
      */
     public function update(Order ...$orders): array
     {

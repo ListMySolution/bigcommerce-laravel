@@ -20,7 +20,7 @@ class ProductRepository extends BaseRepository
     /**
      * Imports and returns all products in a store on BigCommerce
      *
-     * @return Product[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Product[]
      */
     public function import(array $filters = []): array
     {
@@ -49,7 +49,7 @@ class ProductRepository extends BaseRepository
      * @param int $page
      * @param int $limit
      * @param array $filters
-     * @return Product[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Product[]
      */
     public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
     {
@@ -119,7 +119,7 @@ class ProductRepository extends BaseRepository
      * Imports a single product form BigCommerce
      *
      * @param int $id
-     * @return Product|NULL
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Product|NULL
      */
     public function importById(int $id): ?Product
     {
@@ -135,8 +135,8 @@ class ProductRepository extends BaseRepository
     /**
      * Exports new products to BigCommerce
      *
-     * @param Product ...$products
-     * @return Product[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Product ...$products
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Product[]
      */
     public function export(Product ...$products): array
     {
@@ -206,8 +206,8 @@ class ProductRepository extends BaseRepository
     /**
      * Exports at least one product update to BigCommerce
      *
-     * @param Product ...$products
-     * @return Product
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Product ...$products
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Product[]
      */
     public function exportUpdate(Product ...$products): array
     {
@@ -289,7 +289,7 @@ class ProductRepository extends BaseRepository
     /**
      * Fetches available product brands
      *
-     * @return Brand[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Brand[]
      */
     public function importBrands(): array
     {
@@ -321,8 +321,8 @@ class ProductRepository extends BaseRepository
     /**
      * Exports a collection of brands to bigcommerce
      *
-     * @param Brand ...$brands
-     * @return Brand[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Brand ...$brands
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Brand[]
      */
     public function exportBrands(Brand ...$brands): array
     {
@@ -352,8 +352,8 @@ class ProductRepository extends BaseRepository
     /**
      * Updates a collection of brands
      *
-     * @param Brand ...$brands
-     * @return Brand[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Brand ...$brands
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Brand[]
      */
     public function exportUpdateBrands(Brand ...$brands): array
     {
@@ -422,7 +422,7 @@ class ProductRepository extends BaseRepository
     /**
      * Deletes a number of products from BigCommerce
      *
-     * @param Product ...$products
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Product ...$products
      * @return int
      */
     public function delete(Product ...$products): int
@@ -447,8 +447,8 @@ class ProductRepository extends BaseRepository
     /**
      * Save a collection of products to local database
      *
-     * @param Product ...$products
-     * @return Product[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Product ...$products
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Product[]
      */
     public function save(Product ...$products): array
     {
@@ -458,8 +458,8 @@ class ProductRepository extends BaseRepository
     /**
      * Updates a collection of products in local database
      *
-     * @param Product ...$products
-     * @return Product[]
+     * @param \Maverickslab\Integration\BigCommerce\Store\Model\Product ...$products
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\Product[]
      */
     public function update(Product ...$products): array
     {
