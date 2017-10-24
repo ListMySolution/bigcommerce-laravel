@@ -43,8 +43,6 @@ class OrderRepository extends BaseRepository
         $filters = array(
             'min_id' => $id,
             'max_id' => $id
-            // 'page' => 1,
-            // 'limit' => 1
         );
         
         $orders = $this->importByFilters($filters);
@@ -92,41 +90,61 @@ class OrderRepository extends BaseRepository
         $orders = [];
         $page = 1;
         $itemsReturnedForCurrentRequest = 0;
+        
+        do {
+            $currentOrders = $this->importByPage($page ++, $limit, $filters);
+            
+            foreach ($currentOrders as $order) {
+                $orders[] = $order;
+            }
+            
+            $itemsReturnedForCurrentRequest = count($currentOrders);
+        } while ($limit == $itemsReturnedForCurrentRequest);
+        
+        return $orders;
+    }
+
+    /**
+     * Imports orders at a given page
+     *
+     * @param int $page
+     * @param int $limit
+     * @param array $filters
+     * @return Order[]
+     */
+    public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
+    {
+        $orders = [];
+        
+        $response = $this->bigCommerce->order()
+            ->fetch($page, $limit, $filters)
+            ->wait();
+        
+        $responseData = $this->decodeResponse($response);
+        
+        if (! is_array($responseData->data)) {
+            return $orders;
+        }
+        
         $customerPromises = [];
         $productPromises = [];
         $shippingAddressPromises = [];
         $couponPromises = [];
         
-        do {
-            $response = $this->bigCommerce->order()
-                ->fetch($page ++, $limit, $filters)
-                ->wait();
+        foreach ($responseData->data as $orderModel) {
+            $order = Order::fromBigCommerce($orderModel);
             
-            $responseData = $this->decodeResponse($response);
+            $orders[$order->getId()] = $order;
+            // BIGCOMMERCE DOES NOT INCLUDE FULL CUSTOMER DETAILS AND PRODDUCTS IN ORDER REQUEST, SO WE HAVE TO FIND A WAY TO FETCH
+            // THEM SUBSEQUENT REQUEST
+            $customerPromises[$order->getId()] = $this->bigCommerce->customer()->fetchById($order->getCustomerId());
             
-            if (is_array($responseData->data)) {
-                $itemsReturnedForCurrentRequest = count($responseData->data);
-                
-                foreach ($responseData->data as $orderModel) {
-                    $order = Order::fromBigCommerce($orderModel);
-                    
-                    $orders[$order->getId()] = $order;
-                    // BIGCOMMERCE DOES NOT INCLUDE FULL CUSTOMER DETAILS AND PRODDUCTS IN ORDER REQUEST, SO WE HAVE TO FIND A WAY TO FETCH
-                    // THEM SUBSEQUENT REQUEST
-                    $customerPromises[$order->getId()] = $this->bigCommerce->customer()->fetchById($order->getCustomerId());
-                    
-                    $productPromises[$order->getId()] = $this->bigCommerce->order()->fetchOrderedProducts($order->getId(), 1, 250);
-                    
-                    $shippingAddressPromises[$order->getId()] = $this->bigCommerce->order()->fetchShippingAddresses($order->getId(), 1, 250);
-                    
-                    $couponPromises[$order->getId()] = $this->bigCommerce->order()->fetchCoupons($order->getId(), 1, 250);
-                }
-            } else {
-                // A 204 - No content- may have been returned.
-                // Break, assuming we have reach the end of the list
-                break;
-            }
-        } while ($limit == $itemsReturnedForCurrentRequest);
+            $productPromises[$order->getId()] = $this->bigCommerce->order()->fetchOrderedProducts($order->getId(), 1, 250);
+            
+            $shippingAddressPromises[$order->getId()] = $this->bigCommerce->order()->fetchShippingAddresses($order->getId(), 1, 250);
+            
+            $couponPromises[$order->getId()] = $this->bigCommerce->order()->fetchCoupons($order->getId(), 1, 250);
+        }
         
         $finalPromises = array(
             'customer' => $this->bigCommerce->customer()->resolvePromises($customerPromises),

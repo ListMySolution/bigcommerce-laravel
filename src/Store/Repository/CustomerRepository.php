@@ -17,51 +17,91 @@ class CustomerRepository extends BaseRepository
     /**
      * Imports all customer from a store on BigCommerce
      *
+     * @param array $filters
      * @return Customer[]
      */
-    public function import(): array
+    public function import(array $filters = []): array
     {
         $page = 1;
-        $limit = 1000;
+        $limit = 250;
         $customers = [];
         $itemsReturnedForCurrentRequest = 0;
         
-        $addressPromises = [];
-        
         do {
-            $response = $this->bigCommerce->customer()
-                ->fetch($page ++, $limit)
-                ->wait();
+            $currentCustomers = $this->importByPage($page ++, $limit, $filters);
             
-            $responseData = $this->decodeResponse($response);
+            $itemsReturnedForCurrentRequest = count($currentCustomers);
             
-            if (is_array($responseData->data)) {
-                
-                $itemsReturnedForCurrentRequest = count($responseData->data);
-                
-                foreach ($responseData->data as $customerModel) {
-                    $customer = Customer::fromBigCommerce($customerModel);
-                    $customers[$customer->getId()] = $customer;
-                    $addressPromises[$customer->getId()] = $this->bigCommerce->customer()->fetchAddresses($customer->getId());
-                }
+            foreach ($currentCustomers as $customer) {
+                $customers[] = $customer;
             }
         } while ($limit === $itemsReturnedForCurrentRequest);
         
-        $addressResponses = $this->bigCommerce->customer()
-            ->resolvePromises($addressPromises)
+        return $customers;
+    }
+
+    /**
+     * Imports a single customer by Id
+     *
+     * @param int $id
+     * @return Customer|NULL
+     */
+    public function importById(int $id): ?Customer
+    {
+        $filters = [
+            'min_id' => $id,
+            'max_id' => $id
+        ];
+        
+        $matches = $this->import($filters);
+        
+        return array_shift($matches);
+    }
+
+    /**
+     * Imports customers at a given page
+     *
+     * @param int $page
+     * @param int $limit
+     * @param array $filters
+     * @return Customer[]
+     */
+    public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
+    {
+        $customers = [];
+        
+        $response = $this->bigCommerce->customer()
+            ->fetch($page, $limit, $filters)
             ->wait();
         
-        foreach ($addressResponses as $customerId => $addressResponse) {
-            $addressResponseData = $this->decodeResponse($addressResponse);
+        $responseData = $this->decodeResponse($response);
+        
+        $addressPromises = [];
+        
+        if (is_array($responseData->data)) {
+            foreach ($responseData->data as $customerModel) {
+                $customer = Customer::fromBigCommerce($customerModel);
+                $customers[$customer->getId()] = $customer;
+                $addressPromises[$customer->getId()] = $this->bigCommerce->customer()->fetchAddresses($customer->getId());
+            }
             
-            if (is_array($addressResponseData->data)) {
-                $addreses = array_map(function ($addressModel) {
-                    return CustomerAddress::fromBigCommerce($addressModel);
-                }, $addressResponseData->data);
+            $addressResponses = $this->bigCommerce->customer()
+                ->resolvePromises($addressPromises)
+                ->wait();
+            
+            foreach ($addressResponses as $customerId => $addressResponse) {
+                $addressResponseData = $this->decodeResponse($addressResponse);
                 
-                $customers[$customerId]->addAddresses(...$addreses);
+                if (is_array($addressResponseData->data)) {
+                    $addreses = array_map(function ($addressModel) {
+                        return CustomerAddress::fromBigCommerce($addressModel);
+                    }, $addressResponseData->data);
+                    
+                    $customers[$customerId]->addAddresses(...$addreses);
+                }
             }
         }
+        
         return array_values($customers);
     }
 
@@ -98,7 +138,7 @@ class CustomerRepository extends BaseRepository
      * @return Customer[]
      */
     public function exportUpdate(Customer ...$customers): array
-    {   
+    {
         $promises = [];
         
         foreach ($customers as $customer) {

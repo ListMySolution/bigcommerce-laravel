@@ -11,30 +11,52 @@ class ProductCategoryRepository extends BaseRepository
     /**
      * Imports all categories from BigCommerce
      *
+     * @param array $filters
      * @return Category[]
      */
-    public function import(): array
+    public function import(array $filters = []): array
     {
         $page = 1;
-        $limit = 1000;
-        $totalPages = 0;
+        $limit = 250;
         $categories = [];
+        $itemsReturnedForCurrentRequest = 0;
         
         do {
-            $response = $this->bigCommerce->category()
-                ->fetch($page ++, $limit)
-                ->wait();
+            $currentCategories = $this->importByPage($page ++, $limit, $filters);
             
-            $responseData = $this->decodeResponse($response);
+            $itemsReturnedForCurrentRequest = count($currentCategories);
             
-            $totalPages = $responseData->meta->pagination->total_pages;
-            
-            if (is_array($responseData->data)) {
-                foreach ($responseData->data as $categoryModel) {
-                    $categories[] = Category::fromBigCommerce($categoryModel);
-                }
+            foreach ($currentCategories as $category) {
+                $categories[] = $category;
             }
-        } while ($page <= $totalPages);
+        } while ($limit == $itemsReturnedForCurrentRequest);
+        
+        return $categories;
+    }
+
+    /**
+     * Imports orders at a given page
+     *
+     * @param int $page
+     * @param int $limit
+     * @param array $filters
+     * @return Category[]
+     */
+    public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
+    {
+        $response = $this->bigCommerce->category()
+            ->fetch($page, $limit, $filters)
+            ->wait();
+        
+        $responseData = $this->decodeResponse($response);
+        
+        $categories = [];
+        
+        if (is_array($responseData->data)) {
+            foreach ($responseData->data as $categoryModel) {
+                $categories[] = Category::fromBigCommerce($categoryModel);
+            }
+        }
         
         return $categories;
     }
@@ -113,7 +135,7 @@ class ProductCategoryRepository extends BaseRepository
 
     /**
      * Deletes a collection of categories
-     * 
+     *
      * @param Category ...$categories
      * @return int
      */

@@ -56,6 +56,7 @@ class ProductRepositoryTest extends BaseRepositoryTest
         
         for ($counter = 0; $counter < $productCounts; $counter ++) {
             $this->mockHandler->append(new Response(200, $this->responseHeaders, $this->readResponseFile($responseFile)));
+            $this->mockHandler->append(new Response(200, $this->responseHeaders, $this->readResponseFile($responseFile)));
         }
         
         $products = $this->repository->import();
@@ -79,8 +80,6 @@ class ProductRepositoryTest extends BaseRepositoryTest
         
         $products = [];
         
-        $this->assertCount(0, $products);
-        
         $this->mockHandler->append(new Response(200, $this->responseHeaders, $this->readResponseFile($responseFile)));
         
         $productListInfo = json_decode($this->readResponseFile($responseFile));
@@ -89,6 +88,7 @@ class ProductRepositoryTest extends BaseRepositoryTest
         
         for ($counter = 0; $counter < $productCounts; $counter ++) {
             $this->mockHandler->append(new Response(200, $this->responseHeaders, $this->readResponseFile($responseFile)));
+            $this->mockHandler->append(new Response(200, $this->responseHeaders, $this->readResponseFile($responseFile)));
         }
         
         return array_map(function (Product $product) {
@@ -96,6 +96,7 @@ class ProductRepositoryTest extends BaseRepositoryTest
                 $product
             ];
         }, $this->repository->import());
+        
     }
 
     /**

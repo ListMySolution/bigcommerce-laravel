@@ -27,68 +27,89 @@ class ProductRepository extends BaseRepository
         $products = [];
         
         $page = 1;
-        $totalPages = 0;
-        $limit = 1000;
+        $limit = 250;
+        $itemsReturnedForCurrentRequest = 0;
+        
+        do {
+            $currentProducts = $this->importByPage($page ++, $limit, $filters);
+            
+            $itemsReturnedForCurrentRequest = count($currentProducts);
+            
+            foreach ($currentProducts as $product) {
+                $products[] = $product;
+            }
+        } while ($limit == $itemsReturnedForCurrentRequest);
+        
+        return $products;
+    }
+
+    /**
+     * Imports products at a given page
+     *
+     * @param int $page
+     * @param int $limit
+     * @param array $filters
+     * @return Product[]
+     */
+    public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
+    {
+        $products = [];
+        
         $includes = array(
             'variants',
             'images',
             'bulk_pricing_rules'
         );
         
+        $response = $this->bigCommerce->product()
+            ->fetch($page, $limit, $includes, [], [], $filters)
+            ->wait();
+        
+        $responseData = $this->decodeResponse($response);
+        
         $categoryPromises = [];
         
         $brandPromises = [];
         
-        do {
-            
-            $response = $this->bigCommerce->product()
-                ->fetch($page ++, $limit, $includes, [], [], $filters)
-                ->wait();
-            
-            $responseData = $this->decodeResponse($response);
-            
-            $totalPages = $responseData->meta->pagination->total_pages;
-            
-            if (is_array($responseData->data)) {
-                foreach ($responseData->data as $productModel) {
-                    $product = Product::fromBigCommerce($productModel);
+        if (is_array($responseData->data)) {
+            foreach ($responseData->data as $productModel) {
+                $product = Product::fromBigCommerce($productModel);
+                
+                $products[$product->getId()] = $product;
+                
+                if (count($product->getCategoryIds())) {
+                    $productCategoryPromises = array_map(function ($categoryId) {
+                        return $this->bigCommerce->category()->fetchById($categoryId);
+                    }, $product->getCategoryIds());
                     
-                    $products[$product->getId()] = $product;
-                    
-                    if (count($product->getCategoryIds())) {
-                        $productCategoryPromises = array_map(function ($categoryId) {
-                            return $this->bigCommerce->category()->fetchById($categoryId);
-                        }, $product->getCategoryIds());
-                        
-                        $categoryPromises[$product->getId()] = $this->bigCommerce->category()->resolvePromises($productCategoryPromises);
-                    }
-                    
-                    if ($product->getBrandId()) {
-                        $brandPromises[$product->getId()] = $this->bigCommerce->product()->fetchBrandById($product->getBrandId());
-                    }
+                    $categoryPromises[$product->getId()] = $this->bigCommerce->category()->resolvePromises($productCategoryPromises);
+                }
+                
+                if ($product->getBrandId()) {
+                    $brandPromises[$product->getId()] = $this->bigCommerce->product()->fetchBrandById($product->getBrandId());
                 }
             }
-        } while ($page <= $totalPages);
-        
-        $allPromises = array(
-            'categories' => $this->bigCommerce->category()->resolvePromises($categoryPromises),
-            'brands' => $this->bigCommerce->product()->resolvePromises($brandPromises)
-        );
-        
-        $bulkResponses = $this->bigCommerce->product()
-            ->resolvePromises($allPromises)
-            ->wait();
-        
-        foreach ($bulkResponses['categories'] as $productId => $categoryResponseArray) {
-            foreach ($categoryResponseArray as $categoryResponse) {
-                $categoryResponseData = $this->decodeResponse($categoryResponse);
-                $products[$productId]->addCategory(Category::fromBigCommerce($categoryResponseData->data));
+            
+            $allPromises = array(
+                'categories' => $this->bigCommerce->category()->resolvePromises($categoryPromises),
+                'brands' => $this->bigCommerce->product()->resolvePromises($brandPromises)
+            );
+            
+            $bulkResponses = $this->bigCommerce->product()
+                ->resolvePromises($allPromises)
+                ->wait();
+            
+            foreach ($bulkResponses['categories'] as $productId => $categoryResponseArray) {
+                foreach ($categoryResponseArray as $categoryResponse) {
+                    $categoryResponseData = $this->decodeResponse($categoryResponse);
+                    $products[$productId]->addCategory(Category::fromBigCommerce($categoryResponseData->data));
+                }
             }
-        }
-        
-        foreach ($bulkResponses['brands'] as $productId => $brandResponse) {
-            $brandResponseData = $this->decodeResponse($brandResponse);
-            $products[$productId]->setBrand(Brand::fromBigCommerce($brandResponseData->data));
+            
+            foreach ($bulkResponses['brands'] as $productId => $brandResponse) {
+                $brandResponseData = $this->decodeResponse($brandResponse);
+                $products[$productId]->setBrand(Brand::fromBigCommerce($brandResponseData->data));
+            }
         }
         
         return array_values($products);
@@ -108,7 +129,7 @@ class ProductRepository extends BaseRepository
         
         $matchedProducts = $this->import($filters);
         
-        return count($matchedProducts) ? $matchedProducts[0] : null;
+        return array_shift($matchedProducts);
     }
 
     /**
