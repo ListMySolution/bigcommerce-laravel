@@ -72,6 +72,21 @@ class BigCommerceIntegrator
     }
 
     /**
+     * Creates a new instance statically
+     * 
+     * @param string $authToken
+     * @param string $clientId
+     * @param string $clientSecret
+     * @param string $storeId
+     * @param RepositoryWriterInterface $repositoryWriter
+     * @return \Maverickslab\Integration\BigCommerce\BigCommerceIntegrator
+     */
+    public function createInstance(string $authToken, string $clientId, string $clientSecret, string $storeId, RepositoryWriterInterface $repositoryWriter = null)
+    {
+        return new static($authToken, $clientId, $clientSecret, $storeId, $repositoryWriter);
+    }
+
+    /**
      *
      * @return MerchantRepository
      */
