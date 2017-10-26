@@ -20,6 +20,21 @@ use Maverickslab\Integration\BigCommerce\Store\Model\OrderCoupon;
  */
 class OrderRepository extends BaseRepository
 {
+    
+    /**
+     * Returns number of orders available
+     * @return int
+     */
+    public function count(): int
+    {
+        $response = $this->bigCommerce->order()
+            ->count()
+            ->wait();
+        
+        $responseData = $this->decodeResponse($response);
+        
+        return (int) $responseData->data->count ?? 0;
+    }
 
     /**
      * Imports all order from BigCommerce

@@ -16,6 +16,21 @@ use Maverickslab\Integration\BigCommerce\Store\Model\Brand;
  */
 class ProductRepository extends BaseRepository
 {
+    
+    /**
+     * Returns number of products available
+     * @return int
+     */
+    public function count(): int
+    {
+        $response = $this->bigCommerce->product()
+        ->count()
+        ->wait();
+        
+        $responseData = $this->decodeResponse($response);
+        
+        return (int) $responseData->data->count ?? 0;
+    }
 
     /**
      * Imports and returns all products in a store on BigCommerce

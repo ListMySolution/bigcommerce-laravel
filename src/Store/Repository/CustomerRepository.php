@@ -15,6 +15,21 @@ class CustomerRepository extends BaseRepository
 {
 
     /**
+     * Returns number of customer available
+     * @return int
+     */
+    public function count(): int
+    {
+        $response = $this->bigCommerce->customer()
+        ->count()
+        ->wait();
+        
+        $responseData = $this->decodeResponse($response);
+        
+        return (int) $responseData->data->count ?? 0;
+    }
+    
+    /**
      * Imports all customer from a store on BigCommerce
      *
      * @param array $filters

@@ -9,6 +9,21 @@ class ProductCategoryRepository extends BaseRepository
 {
 
     /**
+     * Returns number of categories available
+     * @return int
+     */
+    public function count(): int
+    {
+        $response = $this->bigCommerce->category()
+        ->count()
+        ->wait();
+        
+        $responseData = $this->decodeResponse($response);
+        
+        return (int) $responseData->data->count ?? 0;
+    }
+    
+    /**
      * Imports all categories from BigCommerce
      *
      * @param array $filters
