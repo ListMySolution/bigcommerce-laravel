@@ -52,7 +52,7 @@ abstract class BaseRepository
         $content = json_decode($response->getBody()->getContents());
         
         if ($closeStream) {
-            $response->getBody()->close()
+            $response->getBody()->close();
         }
         
         // Make BigCommerce API v2 response compactible with v3
