@@ -40,15 +40,20 @@ abstract class BaseRepository
      * Decodes a response
      *
      * @param Response $response
+     * @param bool $closeStream
      * @return stdClass|NULL
      */
-    protected function decodeResponse(?Response $response): ?stdClass
+    protected function decodeResponse(?Response &$response, bool $closeStream = true): ?stdClass
     {
         if (null === $response) {
             return null;
         }
         
         $content = json_decode($response->getBody()->getContents());
+        
+        if ($closeStream) {
+            $response->getBody()->close();
+        }
         
         // Make BigCommerce API v2 response compactible with v3
         if (! ($content instanceof stdClass) || ! isset($content->data)) {
