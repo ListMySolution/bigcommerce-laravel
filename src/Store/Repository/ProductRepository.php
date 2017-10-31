@@ -16,16 +16,17 @@ use Maverickslab\Integration\BigCommerce\Store\Model\Brand;
  */
 class ProductRepository extends BaseRepository
 {
-    
+
     /**
      * Returns number of products available
+     * 
      * @return int
      */
     public function count(): int
     {
         $response = $this->bigCommerce->product()
-        ->count()
-        ->wait();
+            ->count()
+            ->wait();
         
         $responseData = $this->decodeResponse($response);
         
@@ -64,9 +65,10 @@ class ProductRepository extends BaseRepository
      * @param int $page
      * @param int $limit
      * @param array $filters
+     * @param bool $includeCategories
      * @return \Maverickslab\Integration\BigCommerce\Store\Model\Product[]
      */
-    public function importByPage(int $page = 1, int $limit = 250, array $filters = []): array
+    public function importByPage(int $page = 1, int $limit = 250, array $filters = [], bool $includeCategories = false): array
     {
         $products = [];
         
@@ -92,7 +94,7 @@ class ProductRepository extends BaseRepository
                 
                 $products[$product->getId()] = $product;
                 
-                if (count($product->getCategoryIds())) {
+                if (true === $includeCategories && count($product->getCategoryIds())) {
                     $productCategoryPromises = array_map(function ($categoryId) {
                         return $this->bigCommerce->category()->fetchById($categoryId);
                     }, $product->getCategoryIds());
