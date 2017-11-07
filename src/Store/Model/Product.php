@@ -1806,7 +1806,7 @@ class Product extends BaseModel
             $instance->setCalculatedPrice((float) static::readAttribute($model, 'calculated_price', 0));
             $instance->setCostPrice((float) static::readAttribute($model, 'cost_price', 0));
             $instance->setRetailPrice((float) static::readAttribute($model, 'retail_price', 0));
-            $instance->setSalePrice((float) static::readAttribute($model, 'sale_price'));
+            $instance->setSalePrice((float) static::readAttribute($model, 'sale_price'), 0);
             $instance->setDescription((string) static::readAttribute($model, 'description'));
             $instance->setType((string) static::readAttribute($model, 'type'));
             $instance->setWeight((float) static::readAttribute($model, 'weight', 0));
