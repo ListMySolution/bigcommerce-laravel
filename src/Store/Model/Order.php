@@ -1648,7 +1648,7 @@ class Order extends BaseModel
     /**
      * Returns order billing address
      *
-     * @return BillingAddress|NULL
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\BillingAddress|NULL
      */
     public function getBillingAddress(): ?BillingAddress
     {
@@ -1717,7 +1717,7 @@ class Order extends BaseModel
     /**
      * Returns products in order
      *
-     * @return OrderedProduct[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\OrderedProduct[]
      */
     public function getProducts(): array
     {
@@ -1742,7 +1742,7 @@ class Order extends BaseModel
     /**
      * Returns shipping address for order
      *
-     * @return array
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\ShippingAddress[]
      */
     public function getShippingAddresses(): array
     {
@@ -1767,7 +1767,7 @@ class Order extends BaseModel
     /**
      * Returns coupons associated with order
      *
-     * @return OrderCoupon[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\OrderCoupon[]
      */
     public function getCoupons(): array
     {
