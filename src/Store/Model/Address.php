@@ -81,6 +81,12 @@ class Address extends BaseModel
      * @var string
      */
     protected $phone;
+    
+    /**
+     *
+     * @var string
+     */
+    protected $email;
 
     /**
      *
@@ -199,6 +205,29 @@ class Address extends BaseModel
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+        
+        return $this;
+    }
+    
+    /**
+     * Returns email for address
+     *
+     * @return string|NULL
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+    
+    /**
+     * Sets email for address
+     *
+     * @param string $email
+     * @return self
+     */
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
         
         return $this;
     }
@@ -410,6 +439,7 @@ class Address extends BaseModel
             $instance->setCountry(static::readAttribute($model, 'country'));
             $instance->setCountryIso2(static::readAttribute($model, 'country_iso2'));
             $instance->setPhone(static::readAttribute($model, 'phone'));
+            $instance->setEmail(static::readAttribute($model, 'email'));
             $instance->setType(static::readAttribute($model, 'address_type'));
             
         }

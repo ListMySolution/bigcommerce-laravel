@@ -440,7 +440,7 @@ class Customer extends BaseModel
     /**
      * Returns customer addresses
      *
-     * @return CustomerAddress[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\CustomerAddress[]
      */
     public function getAddresses(): array
     {
