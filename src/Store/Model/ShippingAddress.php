@@ -18,12 +18,6 @@ class ShippingAddress extends Address
 
     /**
      *
-     * @var string
-     */
-    protected $email;
-
-    /**
-     *
      * @var int
      */
     protected $items_total;
@@ -131,29 +125,6 @@ class ShippingAddress extends Address
     public function setOrderId(?int $orderId): self
     {
         $this->order_id = $orderId;
-        
-        return $this;
-    }
-
-    /**
-     * Returns email for shipping address
-     *
-     * @return string|NULL
-     */
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    /**
-     * Sets email for shipping address
-     *
-     * @param string $email
-     * @return self
-     */
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
         
         return $this;
     }
