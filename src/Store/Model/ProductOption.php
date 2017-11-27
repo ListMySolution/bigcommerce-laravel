@@ -205,7 +205,7 @@ class ProductOption extends BaseModel
     /**
      * Returns option value
      *
-     * @return ProductOptionValue[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\ProductOptionValue[]
      */
     public function getOptionValues(): array
     {
