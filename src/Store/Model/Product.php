@@ -372,6 +372,18 @@ class Product extends BaseModel
      * @var ProductVariant[]
      */
     protected $variants = [];
+    
+    /**
+     *
+     * @var DateTime
+     */
+    protected $date_created;
+    
+    /**
+     *
+     * @var DateTime
+     */
+    protected $date_modified;
 
     /**
      * Returns product Id
@@ -1761,6 +1773,53 @@ class Product extends BaseModel
         
         return $this;
     }
+    
+    /**
+     * Returns date and time on which product was created
+     *
+     * @return DateTime|NULL
+     */
+    public function getDateCreated(): ?DateTime
+    {
+        return $this->date_created;
+    }
+    
+    /**
+     * Sets date and time on which product was created
+     *
+     * @param DateTime $datetime
+     * @return self
+     */
+    public function setDateCreated(?DateTime $datetime): self
+    {
+        $this->date_created = $datetime;
+        
+        return $this;
+    }
+    
+    /**
+     * Returns date and time on which product was last modified
+     *
+     * @return DateTime|NULL
+     */
+    public function getDateModified(): ?DateTime
+    {
+        return $this->date_modified;
+    }
+    
+    /**
+     * Sets date and time on which product was last modified
+     *
+     * @param DateTime $datetime
+     * @return self
+     */
+    public function setDateModified(?DateTime $datetime): self
+    {
+        $this->date_modified = $datetime;
+        
+        return $this;
+    }
+    
 
     /**
      *
@@ -1815,6 +1874,10 @@ class Product extends BaseModel
             $instance->setDepth((float) static::readAttribute($model, 'depth', 0));
             $instance->setTaxClassId((int) static::readAttribute($model, 'tax_class_id'));
             $instance->setTaxCode((string) static::readAttribute($model, 'product_tax_code '));
+            $instance->setDateCreated(static::createDateTime(static::readAttribute($model, 'date_created')));
+            
+            $instance->setDateModified(static::createDateTime(static::readAttribute($model, 'date_modified')));
+            
             $categoriesIds = static::readAttribute($model, 'categories', []);
             
             if (is_array($categoriesIds)) {
