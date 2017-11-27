@@ -1202,7 +1202,7 @@ class OrderedProduct extends BaseModel
      * @param OrderedProductOption ...$options
      * @return self
      */
-    public function addProductOptions(ProductOption ...$options): self
+    public function addProductOptions(OrderedProductOption ...$options): self
     {
         foreach ($options as $option) {
             $this->product_options[] = $option;
