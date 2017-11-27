@@ -7,7 +7,8 @@ use Maverickslab\Integration\BigCommerce\Store\Repository\ {
     ProductRepository,
     ProductCategoryRepository,
     OrderRepository,
-    CustomerRepository
+    CustomerRepository,
+    OptionRepository
 };
 use Maverickslab\BigCommerce\BigCommerce;
 use Maverickslab\BigCommerce\Http\Client\BigCommerceHttpClient;
@@ -53,6 +54,12 @@ class BigCommerceIntegrator
 
     /**
      *
+     * @var OptionRepository
+     */
+    protected $optionRepository;
+
+    /**
+     *
      * @param string $authToken
      * @param string $clientId
      * @param string $clientSecret
@@ -69,6 +76,7 @@ class BigCommerceIntegrator
         $this->productRepository = new ProductRepository($bigCommerceApi, $repositoryWriter);
         $this->orderRepository = new OrderRepository($bigCommerceApi, $repositoryWriter);
         $this->customerRepository = new CustomerRepository($bigCommerceApi, $repositoryWriter);
+        $this->optionRepository = new OptionRepository($bigCommerceApi, $repositoryWriter);
     }
 
     /**
@@ -88,7 +96,7 @@ class BigCommerceIntegrator
 
     /**
      *
-     * @return MerchantRepository
+     * @return \Maverickslab\Integration\BigCommerce\Store\Repository\MerchantRepository
      */
     public function merchant(): MerchantRepository
     {
@@ -97,7 +105,7 @@ class BigCommerceIntegrator
 
     /**
      *
-     * @return ProductCategoryRepository
+     * @return \Maverickslab\Integration\BigCommerce\Store\Repository\ProductCategoryRepository
      */
     public function category(): ProductCategoryRepository
     {
@@ -106,7 +114,7 @@ class BigCommerceIntegrator
 
     /**
      *
-     * @return ProductRepository
+     * @return \Maverickslab\Integration\BigCommerce\Store\Repository\ProductRepository
      */
     public function product(): ProductRepository
     {
@@ -115,7 +123,7 @@ class BigCommerceIntegrator
 
     /**
      *
-     * @return OrderRepository
+     * @return \Maverickslab\Integration\BigCommerce\Store\Repository\OrderRepository
      */
     public function order(): OrderRepository
     {
@@ -124,10 +132,19 @@ class BigCommerceIntegrator
 
     /**
      *
-     * @return CustomerRepository
+     * @return \Maverickslab\Integration\BigCommerce\Store\Repository\CustomerRepository
      */
     public function customer(): CustomerRepository
     {
         return $this->customerRepository;
+    }
+
+    /**
+     *
+     * @return \Maverickslab\Integration\BigCommerce\Store\Repository\OptionRepository
+     */
+    public function option(): OptionRepository
+    {
+        return $this->optionRepository;
     }
 }

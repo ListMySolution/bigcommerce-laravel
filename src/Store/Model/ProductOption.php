@@ -221,6 +221,10 @@ class ProductOption extends BaseModel
     public function addOptionValues(ProductOptionValue ...$optionValues): self
     {
         foreach ($optionValues as $optionValue) {
+            if (! $optionValue->getOptionId()) {
+                $optionValue->setOptionId($this->getId());
+            }
+            
             $this->option_values[] = $optionValue;
         }
         
