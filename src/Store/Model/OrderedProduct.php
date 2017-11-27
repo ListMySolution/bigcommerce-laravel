@@ -273,7 +273,7 @@ class OrderedProduct extends BaseModel
 
     /**
      *
-     * @var ProductOption[]
+     * @var OrderedProductOption[]
      */
     protected $product_options = [];
 
@@ -1190,7 +1190,7 @@ class OrderedProduct extends BaseModel
 
     /**
      *
-     * @return ProductOption[]
+     * @return \Maverickslab\Integration\BigCommerce\Store\Model\OrderedProductOption[]
      */
     public function getProductOptions(): array
     {
@@ -1199,7 +1199,7 @@ class OrderedProduct extends BaseModel
 
     /**
      *
-     * @param ProductOption ...$options
+     * @param OrderedProductOption ...$options
      * @return self
      */
     public function addProductOptions(ProductOption ...$options): self
@@ -1302,7 +1302,7 @@ class OrderedProduct extends BaseModel
             
             if (is_array($productOptionArray)) {
                 $productOptions = array_map(function ($optionModel) {
-                    return ProductOption::fromBigCommerce($optionModel);
+                    return OrderedProductOption::fromBigCommerce($optionModel);
                 }, $productOptionArray);
                 
                 $instance->addProductOptions(...$productOptions);
