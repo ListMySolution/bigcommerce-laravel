@@ -1127,7 +1127,7 @@ class OrderedProduct extends BaseModel
      *
      * @return string|NULL
      */
-    public function getBinKeepingNumber(): ?float
+    public function getBinKeepingNumber(): ?string
     {
         return $this->bin_picking_number;
     }
