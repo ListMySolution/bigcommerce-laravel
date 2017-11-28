@@ -209,7 +209,7 @@ class ProductOption extends BaseModel
      */
     public function getOptionValues(): array
     {
-        return $this->name;
+        return $this->option_values;
     }
 
     /**
