@@ -11,6 +11,36 @@ namespace Maverickslab\Integration\BigCommerce\Store\Model;
 class OrderStatus extends BaseModel
 {
 
+    const STATUS_INCOMPLETE = 0;
+
+    const STATUS_PENDING = 1;
+
+    const STATUS_SHIPPED = 2;
+
+    const STATUS_PARTIALLY_SHIPPED = 3;
+
+    const STATUS_REFUNDED = 4;
+
+    const STATUS_CANCELLED = 5;
+
+    const STATUS_DECLINED = 6;
+
+    const STATUS_AWAITING_PAYMENT = 7;
+
+    const STATUS_AWAITING_PICKUP = 8;
+
+    const STATUS_AWAITING_SHIPMENT = 9;
+
+    const STATUS_COMPLETED = 10;
+
+    const STATUS_AWAITING_FULFILLMENT = 11;
+
+    const STATUS_MANUAL_VERIFICATION_REQUIRED = 12;
+
+    const STATUS_DISPUTED = 13;
+
+    const STATUS_PARTIALLY_REFUNDED = 14;
+
     /**
      *
      * @var int
