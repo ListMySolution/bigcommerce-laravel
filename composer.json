@@ -9,12 +9,6 @@
             "email": "cosman@syncommerceapp.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "cossay@bitbucket.org:maverickslab/bigcommerce.git"
-        }
-    ],
     "require": {
         "mavericks-lab/bigcommerce": "dev-master",
         "illuminate/support": "^5.5"
